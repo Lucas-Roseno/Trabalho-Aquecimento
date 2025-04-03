@@ -31,4 +31,5 @@ vector<vector<int>> Files::lerMatriz()
     {
         cout << e.what() << endl;
     }
+    return vector<vector<int>>();
 }

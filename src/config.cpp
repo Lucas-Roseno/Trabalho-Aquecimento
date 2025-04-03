@@ -7,7 +7,7 @@ void config::executarSimulacao()
   cout << "Iteracao 0:" << endl;
   imprimirMatriz();
 
-  while (aindaTemFogo() && iteracao < 15)
+  while (aindaTemFogo() && iteracao < 7)
   {
     jaQueimou = vector<vector<bool>>(file.linhas, vector<bool>(file.colunas, false));
     cout << "Iteracao " << iteracao << ":" << endl;
