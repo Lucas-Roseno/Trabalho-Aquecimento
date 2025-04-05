@@ -4,15 +4,24 @@ void config::executarSimulacao()
 {
   matriz = file.lerMatriz();
   matriz[file.focoX][file.focoY] = 2;
-  cout << "Iteracao 0:" << endl;
-  imprimirMatriz();
 
-  while (aindaTemFogo() && iteracao < 7)
+  cout << "\nMatriz de entrada:" << endl;
+  imprimirMatriz();
+  
+  while (aindaTemFogo() && iteracao < 10)
   {
     jaQueimou = vector<vector<bool>>(file.linhas, vector<bool>(file.colunas, false));
-    cout << "Iteracao " << iteracao << ":" << endl;
+
+    for (const auto& fogo : fogoInicial)
+    {
+      matriz[fogo.first][fogo.second] = 3;
+    }
 
     propagacaoFogo();
+
+    cout << "Iteracao " << iteracao << ":" << endl;
+    imprimirMatriz();
+
     iteracao++;
   }
 }
@@ -27,11 +36,14 @@ void config::imprimirMatriz()
     }
     cout << "\n";
   }
+  cout << "\n";
 }
 
 void config::propagacaoFogo()
 {
+  fogoInicial.clear();
   vector<vector<int>> novaMatriz = matriz;
+
   for (int i = 0; i < file.linhas; i++)
   {
     for (int j = 0; j < file.colunas; j++)
@@ -39,21 +51,11 @@ void config::propagacaoFogo()
       if (matriz[i][j] == 2)
       {
         novaMatriz = espalharFogo(i, j, novaMatriz);
+        fogoInicial.push_back(make_pair(i, j));
       }
     }
   }
   matriz = novaMatriz;
-  imprimirMatriz();
-
-  for (int i = 0; i < file.linhas; i++)
-  {
-    for (int j = 0; j < file.colunas; j++)
-    {
-      if(jaQueimou[i][j] == true){
-        matriz[i][j] = 3;
-      }
-    }
-  }
 }
 
 vector<vector<int>> config::espalharFogo(int posX, int posY, vector<vector<int>> novaMatriz)
@@ -67,9 +69,6 @@ vector<vector<int>> config::espalharFogo(int posX, int posY, vector<vector<int>>
       novaMatriz[posX + dx[i]][posY + dy[i]] = 2;
     }
     
-    jaQueimou[posX][posY] = true;
-    
-    
   }
   return novaMatriz;
 }
@@ -82,7 +81,6 @@ bool config::aindaTemFogo()
     {
       if (matriz[i][j] == 2)
       {
-        cout << "Ainda há fogo na posição (" << i << "," << j << ")" << endl;
         return true;
       }
     }

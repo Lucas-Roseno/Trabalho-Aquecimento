@@ -4,7 +4,7 @@ vector<vector<int>> Files::lerMatriz()
 {
     try
     {
-        ifstream arquivoEntrada("input.dat");
+        ifstream arquivoEntrada("src/input.dat");
         if (!arquivoEntrada)
         {
             throw runtime_error("Arquivo não encontrado");
