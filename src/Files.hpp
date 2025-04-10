@@ -6,7 +6,7 @@
 using namespace std;
 class Files {
     public:
-        int linhas, colunas, focoX, focoY;
-        vector<vector<int>> lerMatriz();
+        short int linhas, colunas, focoX, focoY;
+        vector<vector<short int>> lerMatriz();
 
 };

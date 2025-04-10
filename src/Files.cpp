@@ -1,6 +1,6 @@
 #include "Files.hpp"
 
-vector<vector<int>> Files::lerMatriz()
+vector<vector<short int>> Files::lerMatriz()
 {
     try
     {
@@ -17,7 +17,7 @@ vector<vector<int>> Files::lerMatriz()
             
             ss >> linhas >> colunas >> focoX >> focoY;
 
-            vector<vector<int>> matriz(linhas, vector<int>(colunas));
+            vector<vector<short int>> matriz(linhas, vector<short int>(colunas));
 
             for(int i = 0; i < linhas; i++){
                 for(int j = 0; j < colunas; j++){
@@ -31,5 +31,5 @@ vector<vector<int>> Files::lerMatriz()
     {
         cout << e.what() << endl;
     }
-    return vector<vector<int>>();
+    return vector<vector<short int>>();
 }

@@ -1,5 +1,7 @@
 #include "config.hpp"
 
+                     
+
 void config::executarSimulacao()
 {
   matriz = file.lerMatriz();
@@ -8,14 +10,19 @@ void config::executarSimulacao()
   cout << "\nMatriz de entrada:" << endl;
   imprimirMatriz();
 
-  while (aindaTemFogo() && iteracao < 7)
+  animal.definirPosIni(matriz, file);
+  animal.rotaDeFuga(matriz, file);
 
-  {
-    jaQueimou = vector<vector<bool>>(file.linhas, vector<bool>(file.colunas, false));
+  while (aindaTemFogo() && iteracao < 7){
 
     for (const auto &fogo : fogoInicial)
     {
       matriz[fogo.first][fogo.second] = 3;
+    }
+
+    if (animal.valorAnterior == 1 && !animal.morreu)
+    {
+      matriz[animal.posicaoAtual.first][animal.posicaoAtual.second] = 1;
     }
 
     propagacaoFogo();
@@ -29,11 +36,11 @@ void config::executarSimulacao()
 
 void config::imprimirMatriz()
 {
-  for (int i = 0; i < file.linhas; i++)
+  for (const auto& linha : matriz)
   {
-    for (int j = 0; j < file.colunas; j++)
+    for (const auto& elemento : linha)
     {
-      cout << matriz[i][j] << " ";
+      cout << elemento << " ";
     }
     cout << "\n";
   }
@@ -43,7 +50,9 @@ void config::imprimirMatriz()
 void config::propagacaoFogo()
 {
   fogoInicial.clear();
-  vector<vector<int>> novaMatriz = matriz;
+  vector<vector<short int>> novaMatriz = matriz;
+
+
 
   for (int i = 0; i < file.linhas; i++)
   {
@@ -59,8 +68,10 @@ void config::propagacaoFogo()
   matriz = novaMatriz;
 }
 
-vector<vector<int>> config::espalharFogo(int posX, int posY, vector<vector<int>> novaMatriz)
+vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz)
 {
+
+  
   switch (direcaoVento)
   {
   case 0: // Sem vento
@@ -179,6 +190,12 @@ vector<vector<int>> config::espalharFogo(int posX, int posY, vector<vector<int>>
     }
     break;
   }
+
+  if (novaMatriz[animal.posicaoAtual.first][animal.posicaoAtual.second] == 2)
+  {
+    animal.morreu = true;
+  }
+  
   return novaMatriz;
 }
 
@@ -197,4 +214,3 @@ bool config::aindaTemFogo()
   cout << "Não há mais fogo na matriz." << endl;
   return false;
 }
-

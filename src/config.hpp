@@ -5,33 +5,35 @@
 #include <vector>
 #include <sstream>
 #include "Files.hpp"
+#include "Animal.hpp"
 
 using namespace std;
 
 class config
 {
-private:
-    Files file;
-    vector<vector<int>> matriz;
-    int iteracao = 0;
-    // Direções: cima, baixo, esquerda, direita
-    int dx[4] = {-1, 1, 0, 0};
-    int dy[4] = {0, 0, -1, 1};
 
-    vector<vector<bool>> jaQueimou;
+private:
+    // Direções: cima, baixo, esquerda, direita
+    short int dx[4] = {-1, 1, 0, 0};
+    short int dy[4] = {0, 0, -1, 1};
+    int iteracao = 0;
+    vector<vector<short int>> matriz;
+    Files file;
     vector<pair<int, int>> fogoInicial;
-    vector<pair<int, int>> apagarFogo;
 
     // Direções: sem vento = 0, acima = 1, baixo = 2, esquerda = 3, direita = 4
     // o resto está no .cpp
-    short int direcaoVento = 12;
+    short int direcaoVento = 0;
 
+    Animal animal = Animal(matriz, file);
 
 public:
     void executarSimulacao();
     void imprimirMatriz();
     void propagacaoFogo();
-    vector<vector<int>> espalharFogo(int posX, int posY, vector<vector<int>> novaMatriz);
+    vector<vector<short int>> espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz);
     bool aindaTemFogo();
     short int definirDirecaoVento();
-};;
+    vector<vector<short int>> getMatriz() const;
+    Files getFile() const;
+};
