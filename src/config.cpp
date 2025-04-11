@@ -1,28 +1,26 @@
 #include "config.hpp"
 
-                     
-
 void config::executarSimulacao()
 {
+
   matriz = file.lerMatriz();
   matriz[file.focoX][file.focoY] = 2;
 
   cout << "\nMatriz de entrada:" << endl;
   imprimirMatriz();
 
-  animal.definirPosIni(matriz, file);
-  animal.rotaDeFuga(matriz, file);
+  Animal animal(matriz, file);
+  cout << "Posição do animal: " << endl;
+  imprimirMatriz();
 
-  while (aindaTemFogo() && iteracao < 7){
+  while (aindaTemFogo() && iteracao < 7)
+  {
+
+    animal.movimentar(matriz, file);
 
     for (const auto &fogo : fogoInicial)
     {
       matriz[fogo.first][fogo.second] = 3;
-    }
-
-    if (animal.valorAnterior == 1 && !animal.morreu)
-    {
-      matriz[animal.posicaoAtual.first][animal.posicaoAtual.second] = 1;
     }
 
     propagacaoFogo();
@@ -32,13 +30,16 @@ void config::executarSimulacao()
 
     iteracao++;
   }
+  cout << "Caminho percorrido pelo animal: " << endl;
+  animal.mostrarCaminho();
+  cout << "Total de passos: " << animal.passos << endl;
 }
 
 void config::imprimirMatriz()
 {
-  for (const auto& linha : matriz)
+  for (const auto &linha : matriz)
   {
-    for (const auto& elemento : linha)
+    for (const auto &elemento : linha)
     {
       cout << elemento << " ";
     }
@@ -51,8 +52,6 @@ void config::propagacaoFogo()
 {
   fogoInicial.clear();
   vector<vector<short int>> novaMatriz = matriz;
-
-
 
   for (int i = 0; i < file.linhas; i++)
   {
@@ -71,7 +70,6 @@ void config::propagacaoFogo()
 vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz)
 {
 
-  
   switch (direcaoVento)
   {
   case 0: // Sem vento
@@ -191,11 +189,11 @@ vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector
     break;
   }
 
-  if (novaMatriz[animal.posicaoAtual.first][animal.posicaoAtual.second] == 2)
-  {
-    animal.morreu = true;
-  }
-  
+  // if (novaMatriz[animal.getPosicaoAtual().first][animal.getPosicaoAtual().second] == 2)
+  // {
+  //   animal.morreu = true;
+  // }
+
   return novaMatriz;
 }
 

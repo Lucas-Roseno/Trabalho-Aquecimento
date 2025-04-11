@@ -10,21 +10,25 @@ CXX       := g++
 CXXFLAGS  := -Wall -Wextra -Werror
 LDFLAGS   := -lm
 
-all: $(APP_DIR)/$(TARGET)
+all: clean $(APP_DIR)/$(TARGET)
+	@clear
+	@echo "Executando $(APP_DIR)/$(TARGET)..."
+	@./$(APP_DIR)/$(TARGET)
 
 $(OBJ_DIR)/%.o: src/%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
 $(APP_DIR)/$(TARGET): $(OBJECTS)
 	@mkdir -p $(dir $@)
-	$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
-	@chmod +x $@  
+	@$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
+	@chmod +x $@
 
 clean:
-	rm -rf $(BUILD)
+	@rm -rf $(BUILD)
 
 run: $(APP_DIR)/$(TARGET)
-	./$(APP_DIR)/$(TARGET)
+	@clear
+	@./$(APP_DIR)/$(TARGET)
 
 .PHONY: all clean run

@@ -9,21 +9,26 @@ class Animal
 protected:
     vector<vector<char>> matrizPassos;
     vector<vector<bool>> visitados;
-    vector<vector<short int>> distancias;
-    vector<vector<pair<short int, short int>>> antecessores;
-
-    short int passos;
+    pair<short int, short int> posicaoAtual = make_pair(-1, -1);
     short int tempoParado = 0;
-    const int dx[4] = {-1, 1, 0, 0};
-    const int dy[4] = {0, 0, -1, 1};
-    
-public:
-    Animal(vector<vector<short int>>& matriz, Files& file);
+    // Direções: cima, baixo, esquerda, direita
+    const short int dx[4] = {-1, 1, 0, 0};
+    const short int dy[4] = {0, 0, -1, 1};
     short int valorAnterior;
-    pair<short int, short int> posicaoAtual;
+
+    vector<short int> valorAdjacente;
+    vector<pair<short int, short int>> posicaoAdjacente;
+
+public:
+    short int passos;
+    pair<short int, short int> getPosicaoAtual();
+    short int getValorAnterior();
+    Animal(vector<vector<short int>> &matriz, Files &file);
+
     bool morreu = false;
-    void definirPosIni(vector<vector<short int>>& matriz, Files& file);
-    void rotaDeFuga(vector<vector<short int>>& matriz, Files& file);
-    void reconstruirCaminho(short int destX, short int destY, vector<vector<short int>>& matriz);
+    void rotaDeFuga(vector<vector<short int>> &matriz, Files &file);
+    void reconstruirCaminho(short int destX, short int destY, vector<vector<short int>> &matriz);
     void mostrarCaminho();
+    void movimentar(vector<vector<short int>> &matriz, Files &file);
+    short int melhorOpcao(vector<short int> &valorAdjacente);
 };
