@@ -53,68 +53,7 @@ void Animal::mostrarCaminho()
 
 void Animal::movimentar(vector<vector<short int>> &matriz, Files &file)
 {
-    valorAdjacente.clear();
-    posicaoAdjacente.clear();
 
-    for (short int i = 0; i < 4; i++)
-    {
-        short int posx = posicaoAtual.first;
-        short int posy = posicaoAtual.second;
-        posx += dx[i];
-        posy += dy[i];
-
-        if (posx >= 0 && posx < file.linhas &&
-            posy >= 0 && posy < file.colunas &&
-            matriz[posx][posy] == 4)
-        {
-            passos++;
-            matriz[posicaoAtual.first][posicaoAtual.second] = valorAnterior;
-            visitados[posicaoAtual.first][posicaoAtual.second] = true;
-            matrizPassos[posicaoAtual.first][posicaoAtual.second] = '*';
-
-            // Atualiza o valor anterior antes de modificar a matriz
-            valorAnterior = matriz[posx][posy];
-
-            posicaoAtual.first = posx;
-            posicaoAtual.second = posy;
-            matriz[posx][posy] = 9;
-            matrizPassos[posx][posy] = '9';
-
-            for (short int j = 0; j < 4; j++)
-            {
-                if ((posx + dx[j]) >= 0 && (posx + dx[j]) < file.linhas &&
-                    (posy + dy[j]) >= 0 && (posy + dy[j]) < file.colunas)
-                {
-                    matriz[posx + dx[j]][posy + dy[j]] = 1;
-                }
-            }
-            return;
-        }
-        else if (posx >= 0 && posx < file.linhas &&
-                 posy >= 0 && posy < file.colunas)
-        {
-            valorAdjacente.push_back(matriz[posx][posy]);
-            posicaoAdjacente.push_back(make_pair(posx, posy));
-        }
-    }
-
-    short int posicaoI = melhorOpcao(valorAdjacente);
-    if (posicaoI != -1)
-    {
-        pair<short int, short int> posAux = posicaoAdjacente[posicaoI];
-
-        // Atualiza o valor anterior antes de modificar a matriz
-        valorAnterior = matriz[posAux.first][posAux.second];
-
-        matriz[posicaoAtual.first][posicaoAtual.second] = valorAnterior;
-        matrizPassos[posicaoAtual.first][posicaoAtual.second] = '*';
-        matriz[posAux.first][posAux.second] = 9;
-        matrizPassos[posAux.first][posAux.second] = '9';
-        visitados[posicaoAtual.first][posicaoAtual.second] = true;
-        posicaoAtual = posAux;
-
-        passos++;
-    }
 }
 
 short int Animal::melhorOpcao(vector<short int> &valorAdjacente)
