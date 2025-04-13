@@ -14,7 +14,7 @@ protected:
     // Direções: cima, baixo, esquerda, direita
     const short int dx[4] = {-1, 1, 0, 0};
     const short int dy[4] = {0, 0, -1, 1};
-    short int valorAnterior;
+    short int valorAnterior = 0;
 
     vector<short int> valorAdjacente;
     vector<pair<short int, short int>> posicaoAdjacente;
@@ -30,5 +30,7 @@ public:
     void reconstruirCaminho(short int destX, short int destY, vector<vector<short int>> &matriz);
     void mostrarCaminho();
     void movimentar(vector<vector<short int>> &matriz, Files &file);
-    short int melhorOpcao(vector<short int> &valorAdjacente);
+    short int melhorOpcao(vector<short int> &valorAdjacente, 
+        vector<pair<short int, short int>> &posicaoAdjacente, vector<vector<bool>> &visitados);
+    void dispersarUmidade(short int &x, short int &y, vector<vector<short int>> &matriz, Files &file);
 };
