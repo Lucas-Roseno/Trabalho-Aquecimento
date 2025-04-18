@@ -5,6 +5,7 @@ void config::executarSimulacao()
 
   matriz = file.lerMatriz();
   matriz[file.focoX][file.focoY] = 2;
+  file.iniciarOutput();
 
   cout << "\nMatriz de entrada:" << endl;
   imprimirMatriz(matriz);
@@ -29,6 +30,7 @@ void config::executarSimulacao()
     for (const auto &fogo : fogoInicial)
     {
       matriz[fogo.first][fogo.second] = 3;
+      file.movimentoFogo(fogo.first, fogo.second, 3, -1, -1);
     }
 
     propagacaoFogo();
@@ -44,11 +46,18 @@ void config::executarSimulacao()
     cout << "====================================" << endl;
 
     iteracao++;
+
+    
+    file.gravarIteracao(iteracao, matriz);
   }
   
   cout << "Caminho percorrido pelo animal: " << endl;
   atualizarMatrizPassos();
   cout << "Total de passos: " << animal.passos << endl;
+
+  file.dadosFinaisAnimal(animal.matrizPassos, animal.passos, animal.morreu);
+
+  file.fecharOutput();
 }
 
 void config::imprimirMatriz(vector<vector<short int>> &matriz)
@@ -85,7 +94,7 @@ void config::propagacaoFogo()
 vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz)
 {
   // Define as direções permitidas para cada tipo de vento
-  static const vector<vector<pair<int, int>>> direcoesVento = {
+  vector<vector<pair<short int, short int>>> direcoesVento = {
       {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}, // 0: sem vento
       {{-1, 0}},                          // 1: cima
       {{1, 0}},                           // 2: baixo
@@ -103,8 +112,8 @@ vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector
 
   for (const auto &dir : direcoesVento[direcaoVento])
   {
-    int auxX = posX + dir.first;
-    int auxY = posY + dir.second;
+    short int auxX = posX + dir.first;
+    short int auxY = posY + dir.second;
 
     if (auxX >= 0 && auxX < file.linhas &&
         auxY >= 0 && auxY < file.colunas &&
@@ -136,6 +145,7 @@ vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector
 
       novaMatriz[auxX][auxY] = 2;
       animal.matrizAnimal[auxX][auxY] = 2;
+      file.movimentoFogo(auxX, auxY, 2, dir.first, dir.second);
 
       imprimirMatriz(animal.matrizAnimal);
       cout << "\n";
@@ -146,6 +156,7 @@ vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector
         novaMatriz[auxX][auxY] == 1)
     {
       novaMatriz[auxX][auxY] = 2;
+      file.movimentoFogo(auxX, auxY, 2, dir.first, dir.second);
     }
   }
 

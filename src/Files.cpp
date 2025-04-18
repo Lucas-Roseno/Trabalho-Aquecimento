@@ -43,3 +43,86 @@ vector<vector<short int>> Files::lerMatriz()
     }
     return vector<vector<short int>>();
 }
+
+
+void Files::iniciarOutput() {
+    arquivoSaida.open("src/output.dat"); 
+    if (!arquivoSaida) {
+        cerr << "Erro ao criar arquivo de saída!" << endl;
+        return;
+    }
+    arquivoSaida << "RESULTADO DA SIMULAÇÃO: \n\n";
+}
+
+void Files::gravarIteracao(int &iteracao, vector<vector<short int>> &matrizFogo) {
+    if (!arquivoSaida.is_open()) {
+        cerr << "Erro: arquivo de saída não está aberto!" << endl;
+        return;
+    }
+
+    arquivoSaida << "Iteração: " << iteracao << endl;
+
+    for (short int i = 0; i < linhas; i++) {
+        for (short int j = 0; j < colunas; j++) {
+            arquivoSaida << matrizFogo[i][j] << " ";
+        }
+        arquivoSaida << endl;
+    }
+
+    arquivoSaida << endl;
+}
+
+void Files::movimentoFogo(short int x, short int y, short int valor, short int dx, short int dy){    
+    arquivoSaida << "- " << "(" << x << ", " << y << ")" << " vira " << valor;
+    string msg = definirDirecao(dx, dy);
+    if (msg != "")
+    {
+        arquivoSaida << " (" << definirDirecao(dx, dy) << ")";    
+    }
+    
+    arquivoSaida << endl;
+}
+
+string Files::definirDirecao(short int &dx, short int &dy){
+    if (dx == -1 && dy == 0)
+    {
+        return "acima";
+    }
+    else if (dx == 1 && dy == 0)
+    {
+        return "abaixo";
+    }
+    else if (dx == 0 && dy == -1)
+    {
+        return "esquerda";
+    }
+    else if (dx == 0 && dy == 1)
+    {
+        return "direita";
+    }else if(dx == -1 && dy == -1){
+        return "";
+    }
+    return "direção inválida";
+}
+
+void Files::fecharOutput() {
+    if (arquivoSaida.is_open()) {
+        arquivoSaida.close();
+    }
+}
+
+void Files::dadosFinaisAnimal(vector<vector<char>> &matrizPassos, short int passos, bool morreu){
+    arquivoSaida << "DADOS FINAIS: " << endl;
+    arquivoSaida << "Caminho percorrido pelo animal: " << endl;
+
+    for (short int i = 0; i < linhas; i++) {
+        for (short int j = 0; j < colunas; j++) {
+            arquivoSaida << matrizPassos[i][j] << " ";
+        }
+        arquivoSaida << endl;
+    }
+    
+    arquivoSaida << "Total de passos: " << passos << endl;
+
+    arquivoSaida << "Condição final do animal: " << (morreu ? "morreu" : "sobreviveu") << endl;
+}
