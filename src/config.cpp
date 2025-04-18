@@ -7,12 +7,12 @@ void config::executarSimulacao()
   matriz[file.focoX][file.focoY] = 2;
 
   cout << "\nMatriz de entrada:" << endl;
-  imprimirMatriz();
+  imprimirMatriz(matriz);
 
   animal.inicializador(matriz, file);
-  cout << "Posição do animal: " << animal.getPosicaoAtual().first << ", "
+  cout << "\nPosição do animal: " << animal.getPosicaoAtual().first << ", "
        << animal.getPosicaoAtual().second << endl;
-  imprimirMatriz();
+  imprimirMatriz(animal.matrizAnimal);
 
   while (aindaTemFogo() && iteracao < IteracoesMax)
   {
@@ -20,13 +20,12 @@ void config::executarSimulacao()
     {
       animal.movimentar(matriz, file, false);
     }
-    
-    cout << "ITERAÇÃO " << iteracao << ":" << endl;
-    cout << "Movimentação do animal: " << endl;
-    imprimirMatriz();
-    
 
-    //apaga os fogos da última iteração
+    cout << "\nITERAÇÃO " << iteracao << ":" << endl;
+    cout << "Movimentação do animal: " << endl;
+    imprimirMatriz(animal.matrizAnimal);
+
+    // apaga os fogos da última iteração
     for (const auto &fogo : fogoInicial)
     {
       matriz[fogo.first][fogo.second] = 3;
@@ -34,17 +33,25 @@ void config::executarSimulacao()
 
     propagacaoFogo();
 
+    if (animal.apagouFogo)
+    {
+      dispersarUmidade(animal.posicaoAtual.first, animal.posicaoAtual.second);
+    }
+
     cout << "Movimentação do fogo: " << endl;
-    imprimirMatriz();
+    imprimirMatriz(matriz);
+
+    cout << "====================================" << endl;
 
     iteracao++;
   }
+  
   cout << "Caminho percorrido pelo animal: " << endl;
-  animal.mostrarCaminho();
+  atualizarMatrizPassos();
   cout << "Total de passos: " << animal.passos << endl;
 }
 
-void config::imprimirMatriz()
+void config::imprimirMatriz(vector<vector<short int>> &matriz)
 {
   for (const auto &linha : matriz)
   {
@@ -54,7 +61,6 @@ void config::imprimirMatriz()
     }
     cout << "\n";
   }
-  cout << "\n";
 }
 
 void config::propagacaoFogo()
@@ -102,39 +108,36 @@ vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector
 
     if (auxX >= 0 && auxX < file.linhas &&
         auxY >= 0 && auxY < file.colunas &&
-        novaMatriz[auxX][auxY] == 9 && animal.valorAnterior == 1)
+        animal.matrizAnimal[auxX][auxY] == 9 && animal.valorAnterior == 1)
     {
-      
-      
-      //Faz a movimentação podendo acessar as casas já visitadas
+
+      // Faz a movimentação podendo acessar as casas já visitadas
       animal.movimentar(novaMatriz, file, true);
-      //Se nesse caso retornar -1, significa que o animal está cercado e casa atual é diferente de 0
+      // Se nesse caso retornar -1, significa que o animal está cercado e casa atual é diferente de 0
       if (animal.valorI == -1)
       {
         if (animal.valorAnterior == 0 || animal.tempoParado > 3)
         {
-            cout << "Como o valor da casa é 0 ele pode ficar parado por 3 iterações" << endl;
-            cout << "Número de iterações parado: " << animal.tempoParado;
-        }else{
-            cout << "Não há casas sem fogo ao redor e a casa atual é igual a 1." << endl;
-            cout << "Animal morreu!" << endl;
-            animal.morreu = true;
-            animal.iteracaoMorte = iteracao;
+          cout << "Como o valor da casa é 0 ele pode ficar parado por 3 iterações" << endl;
+          cout << "Número de iterações parado: " << animal.tempoParado;
         }
-      }else{
+        else
+        {
+          cout << "Não há casas sem fogo ao redor e a casa atual é igual a 1." << endl;
+          cout << "Animal morreu!" << endl;
+          animal.morreu = true;
+          animal.iteracaoMorte = iteracao;
+        }
+      }
+      else
+      {
         cout << "Fogo atingiu a casa do animal e ele deu o 2 movimento." << endl;
       }
 
       novaMatriz[auxX][auxY] = 2;
+      animal.matrizAnimal[auxX][auxY] = 2;
 
-      for (const auto &linha : novaMatriz)
-      {
-        for (const auto &elemento : linha)
-        {
-          cout << elemento << " ";
-        }
-        cout << "\n";
-      }
+      imprimirMatriz(animal.matrizAnimal);
       cout << "\n";
     }
 
@@ -163,4 +166,38 @@ bool config::aindaTemFogo()
   }
   cout << "Não há mais fogo na matriz." << endl;
   return false;
+}
+
+void config::dispersarUmidade(short int &x, short int &y)
+{
+  matriz[x][y] = 0;
+  for (size_t i = 0; i < 4; i++)
+  {
+    short int posx = x + dx[i];
+    short int posy = y + dy[i];
+
+    if (posx >= 0 && posx < file.linhas && posy >= 0 && posy < file.colunas)
+    {
+      if (matriz[posx][posy] != 4)
+      {
+        matriz[posx][posy] = 1;
+      }
+    }
+  }
+}
+
+void config::atualizarMatrizPassos()
+{
+  for (short int i = 0; i < file.linhas; i++)
+  {
+    for (short int j = 0; j < file.colunas; j++)
+    {
+      if (animal.matrizPassos[i][j] != '*' && animal.matrizPassos[i][j] != '9')
+      {
+        animal.matrizPassos[i][j] = static_cast<char>(matriz[i][j] + '0');
+      }
+      cout << animal.matrizPassos[i][j] << " ";
+    }
+    cout << endl;
+  }
 }

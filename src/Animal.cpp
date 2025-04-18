@@ -4,9 +4,11 @@
 
 void Animal::inicializador(vector<vector<short int>> &matriz, Files &file)
 {
-    passos = 0;
     visitados.resize(file.linhas, vector<bool>(file.colunas, false));
     matrizPassos.resize(file.linhas, vector<char>(file.colunas));
+ 
+    matrizAnimal = matriz;
+
     for (short int i = 0; i < file.linhas; i++)
     {
         for (short int j = 0; j < file.colunas; j++)
@@ -15,7 +17,7 @@ void Animal::inicializador(vector<vector<short int>> &matriz, Files &file)
             if (matriz[i][j] == 0 && posicaoAtual.first == -1)
             {
                 posicaoAtual = make_pair(i, j);
-                matriz[i][j] = 9;
+                matrizAnimal[i][j] = 9;
                 matrizPassos[i][j] = '9';
                 visitados[i][j] = true;
             }
@@ -43,6 +45,10 @@ void Animal::mostrarCaminho()
 
 void Animal::movimentar(vector<vector<short int>> &matriz, Files &file, bool acessarVisitados)
 {
+    matrizAnimal = matriz;
+    matrizAnimal[posicaoAtual.first][posicaoAtual.second] = 9;
+
+    apagouFogo = false;
 
     valorAdjacente.clear();
     posicaoAdjacente.clear();
@@ -63,7 +69,7 @@ void Animal::movimentar(vector<vector<short int>> &matriz, Files &file, bool ace
         // guarda os valores e posições
         if (posx >= 0 && posx < file.linhas && posy >= 0 && posy < file.colunas)
         {
-            valorAdjacente.push_back(matriz[posx][posy]);
+            valorAdjacente.push_back(matrizAnimal[posx][posy]);
             posicaoAdjacente.push_back(pair(posx, posy));
         }
     }
@@ -76,8 +82,8 @@ void Animal::movimentar(vector<vector<short int>> &matriz, Files &file, bool ace
         posy = posicaoAdjacente[valorI].second;
 
         // matrizes
-        matriz[posicaoAtual.first][posicaoAtual.second] = valorAnterior;
-        matriz[posx][posy] = 9;
+        matrizAnimal[posicaoAtual.first][posicaoAtual.second] = valorAnterior;
+        matrizAnimal[posx][posy] = 9;
 
         visitados[posicaoAtual.first][posicaoAtual.second] = true;
 
@@ -89,8 +95,9 @@ void Animal::movimentar(vector<vector<short int>> &matriz, Files &file, bool ace
 
         valorAnterior = valorAdjacente[valorI];
         if (valorAnterior == 4)
-        {
-            dispersarUmidade(posx, posy, matriz, file);
+        {   
+            dispersarUmidade(posx, posy, matrizAnimal, file);
+            apagouFogo = true;
         }
 
         posicaoAtual = pair(posx, posy);

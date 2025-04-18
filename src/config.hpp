@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#define IteracoesMax 7
+#define IteracoesMax 1000000000
 class config
 {
 
@@ -30,7 +30,7 @@ public:
     Animal animal;
 
     void executarSimulacao();
-    void imprimirMatriz();
+    void imprimirMatriz(vector<vector<short int>> &matriz);
     void propagacaoFogo();
     vector<vector<short int>> espalharFogo(int posX, int posY, 
         vector<vector<short int>> novaMatriz);
@@ -38,4 +38,7 @@ public:
     short int definirDirecaoVento();
     vector<vector<short int>> getMatriz() const;
     Files getFile() const;
+
+    void dispersarUmidade(short int &x, short int &y);
+    void atualizarMatrizPassos();
 };
