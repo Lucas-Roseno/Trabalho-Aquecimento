@@ -2,7 +2,7 @@
 #include <queue>
 #include <algorithm>
 
-Animal::Animal(vector<vector<short int>> &matriz, Files &file)
+void Animal::inicializador(vector<vector<short int>> &matriz, Files &file)
 {
     passos = 0;
     visitados.resize(file.linhas, vector<bool>(file.colunas, false));
@@ -14,7 +14,6 @@ Animal::Animal(vector<vector<short int>> &matriz, Files &file)
             matrizPassos[i][j] = static_cast<char>(matriz[i][j] + '0');
             if (matriz[i][j] == 0 && posicaoAtual.first == -1)
             {
-                cout << "valor anterior: " << valorAnterior << endl;
                 posicaoAtual = make_pair(i, j);
                 matriz[i][j] = 9;
                 matrizPassos[i][j] = '9';
@@ -27,11 +26,6 @@ Animal::Animal(vector<vector<short int>> &matriz, Files &file)
 pair<short int, short int> Animal::getPosicaoAtual()
 {
     return posicaoAtual;
-}
-
-short int Animal::getValorAnterior()
-{
-    return valorAnterior;
 }
 
 void Animal::mostrarCaminho()
@@ -47,7 +41,7 @@ void Animal::mostrarCaminho()
     cout << "\n";
 }
 
-void Animal::movimentar(vector<vector<short int>> &matriz, Files &file)
+void Animal::movimentar(vector<vector<short int>> &matriz, Files &file, bool acessarVisitados)
 {
 
     valorAdjacente.clear();
@@ -74,12 +68,12 @@ void Animal::movimentar(vector<vector<short int>> &matriz, Files &file)
         }
     }
 
-    short int valorI = melhorOpcao(valorAdjacente,posicaoAdjacente, visitados);
+    valorI = melhorOpcao(valorAdjacente, posicaoAdjacente, visitados, acessarVisitados);
+
     if (valorI != -1)
     {
         posx = posicaoAdjacente[valorI].first;
         posy = posicaoAdjacente[valorI].second;
-
 
         // matrizes
         matriz[posicaoAtual.first][posicaoAtual.second] = valorAnterior;
@@ -91,64 +85,64 @@ void Animal::movimentar(vector<vector<short int>> &matriz, Files &file)
         matrizPassos[posx][posy] = '9';
 
         passos++;
+        tempoParado = 0;
+
         valorAnterior = valorAdjacente[valorI];
         if (valorAnterior == 4)
         {
             dispersarUmidade(posx, posy, matriz, file);
         }
-        
 
         posicaoAtual = pair(posx, posy);
+    }
+    else
+    {
+        tempoParado++;
     }
 }
 
 short int Animal::melhorOpcao(vector<short int> &valorAdjacente,
-    vector<pair<short int, short int>> &posicaoAdjacente, vector<vector<bool>> &visitados)
+                              vector<pair<short int, short int>> &posicaoAdjacente, vector<vector<bool>> &visitados,
+                              bool acessarVisitados)
 {
-    short int posicao1ou0;
-    bool achou1ou0 = false;
-    short int posicao3;
-    bool achou3 = false;
-
-
+    short int posicao1ou0 = -1;
+    short int posicao3 = -1;
 
     for (size_t i = 0; i < valorAdjacente.size(); i++)
     {
         short int x = posicaoAdjacente[i].first;
         short int y = posicaoAdjacente[i].second;
+
         if (valorAdjacente[i] == 4)
         {
             return i;
         }
-        else if ((valorAdjacente[i] == 1 || valorAdjacente[i] == 0) && !achou1ou0
-            && !visitados[x][y])
+        else if ((valorAdjacente[i] == 1 || valorAdjacente[i] == 0) &&
+                 (acessarVisitados || !visitados[x][y]) && posicao1ou0 == -1)
         {
-            achou1ou0 = true;
             posicao1ou0 = i;
         }
-        else if (valorAdjacente[i] == 3 && !achou3 && !visitados[x][y])
+        else if (valorAdjacente[i] == 3 &&
+                 (acessarVisitados || !visitados[x][y]) && posicao3 == -1)
         {
-            achou3 = true;
             posicao3 = i;
         }
     }
 
-    if (achou1ou0)
+    if (posicao1ou0 != -1)
     {
         return posicao1ou0;
     }
-    else if (achou3)
+    if (posicao3 != -1)
     {
         return posicao3;
     }
-    else
-    {
-        return -1;
-    }
+    return -1;
 }
 
 void Animal::dispersarUmidade(short int &x, short int &y, vector<vector<short int>> &matriz,
-    Files &file){
+                              Files &file)
+{
     valorAnterior = 0;
     for (size_t i = 0; i < 4; i++)
     {
@@ -161,6 +155,6 @@ void Animal::dispersarUmidade(short int &x, short int &y, vector<vector<short in
             {
                 matriz[posx][posy] = 1;
             }
-        }     
+        }
     }
 }

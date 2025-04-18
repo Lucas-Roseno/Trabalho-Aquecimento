@@ -9,6 +9,7 @@
 
 using namespace std;
 
+#define IteracoesMax 7
 class config
 {
 
@@ -26,11 +27,13 @@ private:
 public:
     Files file;
     vector<vector<short int>> matriz;
+    Animal animal;
 
     void executarSimulacao();
     void imprimirMatriz();
     void propagacaoFogo();
-    vector<vector<short int>> espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz);
+    vector<vector<short int>> espalharFogo(int posX, int posY, 
+        vector<vector<short int>> novaMatriz);
     bool aindaTemFogo();
     short int definirDirecaoVento();
     vector<vector<short int>> getMatriz() const;

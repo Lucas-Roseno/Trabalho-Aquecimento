@@ -9,15 +9,24 @@ void config::executarSimulacao()
   cout << "\nMatriz de entrada:" << endl;
   imprimirMatriz();
 
-  Animal animal(matriz, file);
-  cout << "Posição do animal: " << endl;
+  animal.inicializador(matriz, file);
+  cout << "Posição do animal: " << animal.getPosicaoAtual().first << ", "
+       << animal.getPosicaoAtual().second << endl;
   imprimirMatriz();
 
-  while (aindaTemFogo() && iteracao < 7)
+  while (aindaTemFogo() && iteracao < IteracoesMax)
   {
+    if (!animal.morreu)
+    {
+      animal.movimentar(matriz, file, false);
+    }
+    
+    cout << "ITERAÇÃO " << iteracao << ":" << endl;
+    cout << "Movimentação do animal: " << endl;
+    imprimirMatriz();
+    
 
-    animal.movimentar(matriz, file);
-
+    //apaga os fogos da última iteração
     for (const auto &fogo : fogoInicial)
     {
       matriz[fogo.first][fogo.second] = 3;
@@ -25,7 +34,7 @@ void config::executarSimulacao()
 
     propagacaoFogo();
 
-    cout << "Iteracao " << iteracao << ":" << endl;
+    cout << "Movimentação do fogo: " << endl;
     imprimirMatriz();
 
     iteracao++;
@@ -69,130 +78,73 @@ void config::propagacaoFogo()
 
 vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz)
 {
+  // Define as direções permitidas para cada tipo de vento
+  static const vector<vector<pair<int, int>>> direcoesVento = {
+      {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}, // 0: sem vento
+      {{-1, 0}},                          // 1: cima
+      {{1, 0}},                           // 2: baixo
+      {{0, -1}},                          // 3: esquerda
+      {{0, 1}},                           // 4: direita
+      {{-1, -1}},                         // 5: cima e esquerda
+      {{-1, 1}},                          // 6: cima e direita
+      {{1, -1}},                          // 7: baixo e esquerda
+      {{1, 1}},                           // 8: baixo e direita
+      {{-1, 0}, {0, -1}, {0, 1}},         // 9: cima, esquerda e direita
+      {{-1, 0}, {1, 0}, {0, -1}},         // 10: cima, baixo e esquerda
+      {{-1, 0}, {1, 0}, {0, 1}},          // 11: cima, baixo e direita
+      {{1, 0}, {0, -1}, {0, 1}}           // 12: baixo, esquerda e direita
+  };
 
-  switch (direcaoVento)
+  for (const auto &dir : direcoesVento[direcaoVento])
   {
-  case 0: // Sem vento
-    for (int i = 0; i < 4; i++)
-    {
-      if (posX + dx[i] >= 0 && posX + dx[i] < file.linhas &&
-          posY + dy[i] >= 0 && posY + dy[i] < file.colunas &&
-          novaMatriz[posX + dx[i]][posY + dy[i]] == 1)
-      {
-        novaMatriz[posX + dx[i]][posY + dy[i]] = 2;
-      }
-    }
-    break;
-  case 1: // cima
-    if (posX - 1 >= 0 && novaMatriz[posX - 1][posY] == 1)
-    {
-      novaMatriz[posX - 1][posY] = 2;
-    }
-    break;
-  case 2: // baixo
-    if (posX + 1 < file.linhas && novaMatriz[posX + 1][posY] == 1)
-    {
-      novaMatriz[posX + 1][posY] = 2;
-    }
-    break;
-  case 3: // esquerda
-    if (posY - 1 >= 0 && novaMatriz[posX][posY - 1] == 1)
-    {
-      novaMatriz[posX][posY - 1] = 2;
-    }
-    break;
-  case 4: // direita
-    if (posY + 1 < file.colunas && novaMatriz[posX][posY + 1] == 1)
-    {
-      novaMatriz[posX][posY + 1] = 2;
-    }
-    break;
-  case 5: // cima e esquerda
-    if (posX - 1 >= 0 && posY - 1 >= 0 && novaMatriz[posX - 1][posY - 1] == 1)
-    {
-      novaMatriz[posX - 1][posY - 1] = 2;
-    }
-    break;
-  case 6: // cima e direita
-    if (posX - 1 >= 0 && posY + 1 < file.colunas && novaMatriz[posX - 1][posY + 1] == 1)
-    {
-      novaMatriz[posX - 1][posY + 1] = 2;
-    }
-    break;
-  case 7: // baixo e esquerda
-    if (posX + 1 < file.linhas && posY - 1 >= 0 && novaMatriz[posX + 1][posY - 1] == 1)
-    {
-      novaMatriz[posX + 1][posY - 1] = 2;
-    }
-    break;
-  case 8: // baixo e direita
-    if (posX + 1 < file.linhas && posY + 1 < file.colunas && novaMatriz[posX + 1][posY + 1] == 1)
-    {
-      novaMatriz[posX + 1][posY + 1] = 2;
-    }
-    break;
-  case 9: // cima, esquerda e direita
-    if (posX - 1 >= 0 && novaMatriz[posX - 1][posY] == 1)
-    {
-      novaMatriz[posX - 1][posY] = 2;
-    }
-    if (posY - 1 >= 0 && novaMatriz[posX][posY - 1] == 1)
-    {
-      novaMatriz[posX][posY - 1] = 2;
-    }
-    if (posY + 1 < file.colunas && novaMatriz[posX][posY + 1] == 1)
-    {
-      novaMatriz[posX][posY + 1] = 2;
-    }
-    break;
-  case 10: // cima, baixo e esquerda
-    if (posX - 1 >= 0 && novaMatriz[posX - 1][posY] == 1)
-    {
-      novaMatriz[posX - 1][posY] = 2;
-    }
-    if (posX + 1 < file.linhas && novaMatriz[posX + 1][posY] == 1)
-    {
-      novaMatriz[posX + 1][posY] = 2;
-    }
-    if (posY - 1 >= 0 && novaMatriz[posX][posY - 1] == 1)
-    {
-      novaMatriz[posX][posY - 1] = 2;
-    }
-    break;
-  case 11: // cima, baixo e direita
-    if (posX - 1 >= 0 && novaMatriz[posX - 1][posY] == 1)
-    {
-      novaMatriz[posX - 1][posY] = 2;
-    }
-    if (posX + 1 < file.linhas && novaMatriz[posX + 1][posY] == 1)
-    {
-      novaMatriz[posX + 1][posY] = 2;
-    }
-    if (posY + 1 < file.colunas && novaMatriz[posX][posY + 1] == 1)
-    {
-      novaMatriz[posX][posY + 1] = 2;
-    }
-    break;
-  case 12: // baixo, esquerda e direita
-    if (posX + 1 < file.linhas && novaMatriz[posX + 1][posY] == 1)
-    {
-      novaMatriz[posX + 1][posY] = 2;
-    }
-    if (posY - 1 >= 0 && novaMatriz[posX][posY - 1] == 1)
-    {
-      novaMatriz[posX][posY - 1] = 2;
-    }
-    if (posY + 1 < file.colunas && novaMatriz[posX][posY + 1] == 1)
-    {
-      novaMatriz[posX][posY + 1] = 2;
-    }
-    break;
-  }
+    int auxX = posX + dir.first;
+    int auxY = posY + dir.second;
 
-  // if (novaMatriz[animal.getPosicaoAtual().first][animal.getPosicaoAtual().second] == 2)
-  // {
-  //   animal.morreu = true;
-  // }
+    if (auxX >= 0 && auxX < file.linhas &&
+        auxY >= 0 && auxY < file.colunas &&
+        novaMatriz[auxX][auxY] == 9 && animal.valorAnterior == 1)
+    {
+      
+      
+      //Faz a movimentação podendo acessar as casas já visitadas
+      animal.movimentar(novaMatriz, file, true);
+      //Se nesse caso retornar -1, significa que o animal está cercado e casa atual é diferente de 0
+      if (animal.valorI == -1)
+      {
+        if (animal.valorAnterior == 0 || animal.tempoParado > 3)
+        {
+            cout << "Como o valor da casa é 0 ele pode ficar parado por 3 iterações" << endl;
+            cout << "Número de iterações parado: " << animal.tempoParado;
+        }else{
+            cout << "Não há casas sem fogo ao redor e a casa atual é igual a 1." << endl;
+            cout << "Animal morreu!" << endl;
+            animal.morreu = true;
+            animal.iteracaoMorte = iteracao;
+        }
+      }else{
+        cout << "Fogo atingiu a casa do animal e ele deu o 2 movimento." << endl;
+      }
+
+      novaMatriz[auxX][auxY] = 2;
+
+      for (const auto &linha : novaMatriz)
+      {
+        for (const auto &elemento : linha)
+        {
+          cout << elemento << " ";
+        }
+        cout << "\n";
+      }
+      cout << "\n";
+    }
+
+    if (auxX >= 0 && auxX < file.linhas &&
+        auxY >= 0 && auxY < file.colunas &&
+        novaMatriz[auxX][auxY] == 1)
+    {
+      novaMatriz[auxX][auxY] = 2;
+    }
+  }
 
   return novaMatriz;
 }
