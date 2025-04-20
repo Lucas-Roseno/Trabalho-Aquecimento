@@ -6,7 +6,7 @@ void Animal::inicializador(vector<vector<short int>> &matriz, Files &file)
 {
     visitados.resize(file.linhas, vector<bool>(file.colunas, false));
     matrizPassos.resize(file.linhas, vector<char>(file.colunas));
- 
+
     matrizAnimal = matriz;
 
     for (short int i = 0; i < file.linhas; i++)
@@ -20,28 +20,13 @@ void Animal::inicializador(vector<vector<short int>> &matriz, Files &file)
                 matrizAnimal[i][j] = 9;
                 matrizPassos[i][j] = '9';
                 visitados[i][j] = true;
+                cout << "\nPosição do animal: " << posicaoAtual.first << ", "
+                     << posicaoAtual.second << endl;
             }
         }
     }
 }
 
-pair<short int, short int> Animal::getPosicaoAtual()
-{
-    return posicaoAtual;
-}
-
-void Animal::mostrarCaminho()
-{
-    for (const auto &linha : matrizPassos)
-    {
-        for (const auto &elemento : linha)
-        {
-            cout << elemento << " ";
-        }
-        cout << "\n";
-    }
-    cout << "\n";
-}
 
 void Animal::movimentar(vector<vector<short int>> &matriz, Files &file, bool acessarVisitados)
 {
@@ -95,15 +80,16 @@ void Animal::movimentar(vector<vector<short int>> &matriz, Files &file, bool ace
 
         valorAnterior = valorAdjacente[valorI];
         if (valorAnterior == 4)
-        {   
+        {
             dispersarUmidade(posx, posy, matrizAnimal, file);
             apagouFogo = true;
+            encontrouAgua++;
         }
 
         posicaoAtual = pair(posx, posy);
     }
     else
-    {
+    {        
         tempoParado++;
     }
 }

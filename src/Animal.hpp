@@ -31,13 +31,11 @@ public:
     bool morreu = false;
     short int valorI = -1;
     bool apagouFogo = false;
+    short int encontrouAgua = 0;
 
     //funções
-    pair<short int, short int> getPosicaoAtual();
-    short int getValorAnterior();
     void rotaDeFuga(vector<vector<short int>> &matriz, Files &file);
     void reconstruirCaminho(short int destX, short int destY, vector<vector<short int>> &matriz);
-    void mostrarCaminho();
     void movimentar(vector<vector<short int>> &matriz, Files &file, bool acessarVisitados);
 
     short int melhorOpcao(vector<short int> &valorAdjacente,

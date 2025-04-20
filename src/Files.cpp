@@ -77,7 +77,7 @@ void Files::movimentoFogo(short int x, short int y, short int valor, short int d
     string msg = definirDirecao(dx, dy);
     if (msg != "")
     {
-        arquivoSaida << " (" << definirDirecao(dx, dy) << ")";    
+        arquivoSaida << " (" << msg << ")";    
     }
     
     arquivoSaida << endl;
@@ -111,7 +111,8 @@ void Files::fecharOutput() {
     }
 }
 
-void Files::dadosFinaisAnimal(vector<vector<char>> &matrizPassos, short int passos, bool morreu){
+void Files::dadosFinaisAnimal(vector<vector<char>> &matrizPassos, short int passos, 
+    bool morreu, short int iteracaoMorte, short int encontrouAgua){
     arquivoSaida << "DADOS FINAIS: " << endl;
     arquivoSaida << "Caminho percorrido pelo animal: " << endl;
 
@@ -123,6 +124,12 @@ void Files::dadosFinaisAnimal(vector<vector<char>> &matrizPassos, short int pass
     }
     
     arquivoSaida << "Total de passos: " << passos << endl;
+    arquivoSaida << "Quantidade de vezes que encontrou água: " << encontrouAgua << endl;
 
     arquivoSaida << "Condição final do animal: " << (morreu ? "morreu" : "sobreviveu") << endl;
+    if (morreu)
+    {
+        arquivoSaida << "Iteração em que o animal morreu: " << iteracaoMorte;
+    }
+    
 }

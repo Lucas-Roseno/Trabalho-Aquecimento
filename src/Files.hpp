@@ -17,5 +17,6 @@ public:
     void movimentoFogo(short int x, short int y, short int valor, short int dx, short int dy);
     void fecharOutput();
     string definirDirecao(short int &dx, short int &dy);
-    void dadosFinaisAnimal(vector<vector<char>> &matrizPassos, short int passos, bool vida);
+    void dadosFinaisAnimal(vector<vector<char>> &matrizPassos, short int passos, 
+        bool vida, short int iteracaoMorte, short int encontrouAgua);
 };
