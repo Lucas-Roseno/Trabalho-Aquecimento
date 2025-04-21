@@ -8,23 +8,26 @@
 
 ## 🧽 Índice
 
-* [📘 Introdução](#introdu%C3%A7%C3%A3o)
-* [🎯 Objetivos](#objetivos)
-* [🧪 Metodologia](#metodologia)
-* [🛠️ Implementação](#implementa%C3%A7%C3%A3o)
-* [🧬 Estrutura do Projeto](#estrutura-do-projeto)
-* [🚀 Como Executar](#como-executar)
-* [📊 Resultados Esperados](#resultados-esperados)
-* [📚 Referências](#refer%C3%AAncias)
-* [👥 Autores](#autores)
+* [📘 Introdução](#-introducao)
+* [🎯 Objetivos](#-objetivos)
+* [🧪 Metodologia](#-metodologia)
+* [🛠️ Implementação](#-implementacao)
+* [🧬 Estrutura do Projeto](#-estrutura-do-projeto)
+* [🚀 Como Executar](#-como-executar)
+* [🔥 Análise de Padrões de Propagação do Fogo](#-analise-de-propagacao-do-fogo)
+* [🧠 Algoritmos Emergentes para Melhoria](#-algoritmos-ermegentes-para-melhoria)
+* [📊 Resultados Esperados](#-resultados-esperados)
+* [🔚 Conclusão](#-conclusao)
+* [📚 Referências](#-referencias)
+* [👥 Autores](#-autores)
 
 ---
 
-## 📘 Introdução
+## 📘 [Introdução]()
 
 Este projeto foi desenvolvido para a disciplina de Algoritmos e Estruturas de Dados I, orientado pelo professor Michel Pires da Silva. O simulador modela a propagação de um incêndio em uma matriz bidimensional que representa uma floresta, considerando o comportamento de um animal que busca rotas seguras e fontes de água para sobreviver.
 
-## 🎯 Objetivos
+## 🎯 [Objetivos]()
 
 ### Objetivo Geral
 
@@ -38,7 +41,7 @@ Simular a propagação do fogo em uma floresta e a movimentação de um animal t
 * Registrar a simulação em arquivos de entrada e saída.
 * Avaliar desempenho com e sem vento.
 
-## 🧪 Metodologia
+## 🧪 [Metodologia]()
 
 A solução foi implementada em C++, utilizando orientação a objetos para modularização das responsabilidades:
 
@@ -46,7 +49,7 @@ A solução foi implementada em C++, utilizando orientação a objetos para modu
 * O animal se move com base em prioridades: água > vazio ou árvore > queimado.
 * A simulação é iterativa até não restar mais fogo.
 
-## 🛠️ Implementação
+## 🛠️ [Implementação]()
 
 ### ⚙️config.hpp/cpp: controle da simulação e propagação do fogo.
 
@@ -781,7 +784,7 @@ run: $(APP_DIR)/$(TARGET)
 
 ---
 
-## 🧬 Estrutura do Projeto
+## 🧬 [Estrutura do Projeto]()
 
 ```text
 Trabalho-Aquecimento/
@@ -806,7 +809,7 @@ Trabalho-Aquecimento/
 
 ---
 
-## 🚀 Como Executar
+## 🚀 [Como Executar]()
 
 ### Pré-requisitos
 
@@ -824,7 +827,7 @@ make run      # Executa a simulação
 
 ---
 
-## 🔥 Análise de Padrões de Propagação do Fogo
+## 🔥 [Análise de Padrões de Propagação do Fogo]()
 
 ### 🌬️ Influência do Vento na Propagação
 
@@ -881,7 +884,7 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ---
 
-## 🧠 Algoritmos Emergentes para Melhoria
+## 🧠 [Algoritmos Emergentes para Melhoria]()
 
 ### 1. Algoritmo de Dijkstra para Fuga Ótima
 
@@ -937,7 +940,7 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ---
 
-## 📊 Resultados Esperados ao Final da Simulação
+## 📊 [Resultados Esperados ao Final da Simulação]()
 
 * Registro detalhado da evolução do fogo a cada iteração.
 * Caminho percorrido pelo animal, total de passos e sobrevivência.
@@ -945,7 +948,7 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ---
 
-## 🔚 Conclusão
+## 🔚 [Conclusão]()
 
 A simulação atual oferece uma boa base para entender os padrões fundamentais de propagação de incêndios florestais. A inclusão do vento adiciona um fator realista que altera significativamente a dinâmica do fogo. Para melhorias futuras, a implementação de algoritmos mais sofisticados, particularmente aqueles baseados em autômatos celulares ou aprendizado por reforço, poderia aumentar tanto a precisão quanto o valor educacional da simulação.
 
@@ -953,7 +956,7 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 
 
 
-## 💻Maquina onde foi programado e testado
+## 💻 [Maquina onde foi programado e testado]()
 
 * **Sistema operacional:**  Ubuntu 24.04.2 LTS
 * **Modelo do hardware:** Lenovo IdeaPad Gaming 3 15IHU6
@@ -962,7 +965,7 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 
 ---
 
-## 📚 Referências
+## 📚 [Referências]()
 
 * Especificação do trabalho prático da disciplina de AED I, Prof. Michel Pires da Silva (2025)
 * cppreference.com (documentação C++)
@@ -1010,7 +1013,7 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 
 ---
 
-## 👥 Autores
+## 👥 [Autores]()
 
 | Nome                          | Função      | Contato                  |
 | ----------------------------- | ------------- | ------------------------ |
