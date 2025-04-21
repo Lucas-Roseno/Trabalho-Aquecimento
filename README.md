@@ -16,7 +16,7 @@
 * [🚀 Como Executar](#-como-executar)
 * [🔥 Análise de Padrões de Propagação do Fogo](#analise-de-padroes-de-propagacao-do-fogo)
 * [🧠 Algoritmos Emergentes para Melhoria](#-algoritmos-emergentes-para-melhoria)
-* [📊 Resultados Esperados](#resultados-esperados)
+* [📊 Resultados Esperados ao Final da Simulação](#resultados-esperados-ao-final-da-simulacao)
 * [🔚 Conclusão](#conclusao)
 * [💻 Maquina onde foi programado e testado](#maquina-onde-foi-programado-e-testado)
 * [📚 Referências](#referencias)
