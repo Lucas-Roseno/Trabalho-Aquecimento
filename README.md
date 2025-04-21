@@ -14,11 +14,11 @@
 * [🛠️ Implementação](#-implementacao)
 * [🧬 Estrutura do Projeto](#-estrutura-do-projeto)
 * [🚀 Como Executar](#-como-executar)
-* [🔥 Análise de Padrões de Propagação do Fogo](#-analise-de-padroes-de-propagacao-do-fogo)
+* [🔥 Análise de Padrões de Propagação do Fogo](#analise-de-padroes-de-propagacao-do-fogo)
 * [🧠 Algoritmos Emergentes para Melhoria](#-algoritmos-emergentes-para-melhoria)
-* [📊 Resultados Esperados](#-resultados-esperados)
-* [🔚 Conclusão](#-conclusao)
-* [📚 Referências](#-referencias)
+* [📊 Resultados Esperados](#resultados-esperados)
+* [🔚 Conclusão](#conclusao)
+* [📚 Referências](#referencias)
 * [👥 Autores](#-autores)
 
 ---
