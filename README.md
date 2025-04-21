@@ -18,6 +18,7 @@
 * [🧠 Algoritmos Emergentes para Melhoria](#-algoritmos-emergentes-para-melhoria)
 * [📊 Resultados Esperados](#resultados-esperados)
 * [🔚 Conclusão](#conclusao)
+* [💻 Maquina onde foi programado e testado](#maquina-onde-foi-programado-e-testado)
 * [📚 Referências](#referencias)
 * [👥 Autores](#-autores)
 
@@ -940,7 +941,7 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ---
 
-## 📊 [Resultados Esperados ao Final da Simulação]()
+## 📊 Resultados Esperados ao Final da Simulação <a name="resultados-esperados-ao-final-da-simulacao"></a>
 
 * Registro detalhado da evolução do fogo a cada iteração.
 * Caminho percorrido pelo animal, total de passos e sobrevivência.
@@ -948,7 +949,7 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ---
 
-## 🔚 [Conclusão]()
+## 🔚 Conclusão <a name="conclusao"></a>
 
 A simulação atual oferece uma boa base para entender os padrões fundamentais de propagação de incêndios florestais. A inclusão do vento adiciona um fator realista que altera significativamente a dinâmica do fogo. Para melhorias futuras, a implementação de algoritmos mais sofisticados, particularmente aqueles baseados em autômatos celulares ou aprendizado por reforço, poderia aumentar tanto a precisão quanto o valor educacional da simulação.
 
@@ -956,7 +957,7 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 
 
 
-## 💻 [Maquina onde foi programado e testado]()
+## 💻 Maquina onde foi programado e testado <a name="maquina-onde-foi-programado-e-testado"></a>
 
 * **Sistema operacional:**  Ubuntu 24.04.2 LTS
 * **Modelo do hardware:** Lenovo IdeaPad Gaming 3 15IHU6
@@ -965,7 +966,7 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 
 ---
 
-## 📚 [Referências]()
+## 📚 Referências <a name="referencias"></a>
 
 * Especificação do trabalho prático da disciplina de AED I, Prof. Michel Pires da Silva (2025)
 * cppreference.com (documentação C++)
