@@ -827,7 +827,7 @@ make run      # Executa a simulação
 
 ---
 
-## 🔥 [Análise de Padrões de Propagação do Fogo]()
+## 🔥 Análise de Padrões de Propagação do Fogo <a name="analise-de-padroes-de-propagacao-do-fogo"></a>
 
 ### 🌬️ Influência do Vento na Propagação
 
