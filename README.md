@@ -21,8 +21,8 @@
 * [📊 Resultados Esperados ao Final da Simulação](#-resultados-esperados-ao-final-da-simulacao)
 * [🔚 Conclusão](#-conclusao)
 * [💻 Maquina onde foi programado e testado](#-maquina-onde-foi-programado-e-testado)
-* [📚 Referências](#-referencias)
 * [👥 Autores](#-autores)
+* [📚 Referências](#-referencias)
 
 ---
 
