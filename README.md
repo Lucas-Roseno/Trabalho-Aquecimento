@@ -1000,7 +1000,7 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 
 ---
 
-## 📚 Referências `<a name="referencias"></a>`
+## 📚 [Referências]()
 
 * Especificação do trabalho prático da disciplina de AED I, Prof. Michel Pires da Silva (2025)
 * cppreference.com (documentação C++)
