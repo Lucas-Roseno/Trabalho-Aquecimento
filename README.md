@@ -16,12 +16,12 @@
 * [🛠️ Implementação](#-implementacao)
 * [🧬 Estrutura do Projeto](#-estrutura-do-projeto)
 * [🚀 Como Executar](#-como-executar)
-* [🔥 Análise de Padrões de Propagação do Fogo](#analise-de-padroes-de-propagacao-do-fogo)
+* [🔥 Análise de Padrões de Propagação do Fogo](#-analise-de-padroes-de-propagacao-do-fogo)
 * [🧠 Algoritmos Emergentes para Melhoria](#-algoritmos-emergentes-para-melhoria)
-* [📊 Resultados Esperados ao Final da Simulação](#resultados-esperados-ao-final-da-simulacao)
-* [🔚 Conclusão](#conclusao)
-* [💻 Maquina onde foi programado e testado](#maquina-onde-foi-programado-e-testado)
-* [📚 Referências](#referencias)
+* [📊 Resultados Esperados ao Final da Simulação](#-resultados-esperados-ao-final-da-simulacao)
+* [🔚 Conclusão](#-conclusao)
+* [💻 Maquina onde foi programado e testado](#-maquina-onde-foi-programado-e-testado)
+* [📚 Referências](#-referencias)
 * [👥 Autores](#-autores)
 
 ---
@@ -855,7 +855,7 @@ make run      # Executa a simulação
 
 ---
 
-## 🔥 Análise de Padrões de Propagação do Fogo `<a name="analise-de-padroes-de-propagacao-do-fogo"></a>`
+## 🔥 [Análise de Padrões de Propagação do Fogo]()
 
 ### 🌬️ Influência do Vento na Propagação
 
@@ -969,7 +969,7 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ---
 
-## 📊 Resultados Esperados ao Final da Simulação `<a name="resultados-esperados-ao-final-da-simulacao"></a>`
+## 📊 [Resultados Esperados ao Final da Simulação]()
 
 * Registro detalhado da evolução do fogo a cada iteração.
 * Caminho percorrido pelo animal, total de passos e sobrevivência.
@@ -977,13 +977,13 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ---
 
-## 🔚 Conclusão `<a name="conclusao"></a>`
+## 🔚 [Conclusão]()
 
 A simulação atual oferece uma boa base para entender os padrões fundamentais de propagação de incêndios florestais. A inclusão do vento adiciona um fator realista que altera significativamente a dinâmica do fogo. Para melhorias futuras, a implementação de algoritmos mais sofisticados, particularmente aqueles baseados em autômatos celulares ou aprendizado por reforço, poderia aumentar tanto a precisão quanto o valor educacional da simulação.
 
 ---
 
-## 💻 Maquina onde foi programado e testado `<a name="maquina-onde-foi-programado-e-testado"></a>`
+## 💻 [Maquina onde foi programado e testado]()
 
 * **Sistema operacional:**  Ubuntu 24.04.2 LTS
 * **Modelo do hardware:** Lenovo IdeaPad Gaming 3 15IHU6
