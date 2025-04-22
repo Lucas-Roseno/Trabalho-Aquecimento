@@ -4,7 +4,7 @@ vector<vector<short int>> Files::lerMatriz()
 {
     try
     {
-        ifstream arquivoEntrada("src/input.dat");
+        ifstream arquivoEntrada("arquivos/input.dat");
         if (!arquivoEntrada)
         {
             throw runtime_error("Arquivo não encontrado");
@@ -46,7 +46,7 @@ vector<vector<short int>> Files::lerMatriz()
 
 
 void Files::iniciarOutput() {
-    arquivoSaida.open("src/output.dat"); 
+    arquivoSaida.open("arquivos/output.dat"); 
     if (!arquivoSaida) {
         cerr << "Erro ao criar arquivo de saída!" << endl;
         return;

@@ -1,3 +1,5 @@
+![Exemplo de imagem](assets/logo.jpeg)
+
 <h1 align="center">
    Simulação de incêndio🔥
 </h1>
@@ -26,7 +28,7 @@
 
 ## 📘 [Introdução]()
 
-Este projeto foi desenvolvido para a disciplina de Algoritmos e Estruturas de Dados I, orientado pelo professor Michel Pires da Silva. O simulador modela a propagação de um incêndio em uma matriz bidimensional que representa uma floresta, considerando o comportamento de um animal que busca rotas seguras e fontes de água para sobreviver.
+Este projeto foi desenvolvido para a disciplina de Algoritmos e Estruturas de Dados I, orientado pelo professor [Michel Pires da Silva](https://github.com/mpiress). O simulador modela a propagação de um incêndio em uma matriz bidimensional que representa uma floresta, considerando o comportamento de um animal que busca rotas seguras e fontes de água para sobreviver.
 
 ## 🎯 [Objetivos]()
 
@@ -290,16 +292,39 @@ void config::dispersarUmidade(short int &x, short int &y) {
 
 #### `imprimirMatriz(vector<vector<short int>> &matriz)`
 
-Função auxiliar que imprime a matriz no terminal, utilizada para depuração.
+Função auxiliar que imprime a matriz no terminal, utilizada para depuração. Foi utilizado caracteres para facilitar a visualização da propagação do fogo, não mudando a matriz original apenas na hora da impressão.
 
 ```cpp
-void config::imprimirMatriz(vector<vector<short int>> &matriz) {
-    for (const auto &linha : matriz) {
-        for (const auto &elemento : linha) {
-            cout << elemento << " ";
-        }
-        cout << "\n";
+void config::imprimirMatriz(vector<vector<short int>> &matriz)
+{
+  for (const auto &linha : matriz)
+  {
+    for (const auto &elemento : linha)
+    {
+      switch (elemento)
+      {
+      case 0:
+        cout << "\U0001FAA8  "; // 🪨 (Espaço vazio)
+        break;
+      case 1:
+        cout << "\U0001F332 "; // 🌲 (Árvore)
+        break;
+      case 2:
+        cout << "\U0001F525 "; // 🔥 (Fogo)
+        break;
+      case 3:
+        cout << "\U00002B1B "; //  (Bloco preto)
+        break;
+      case 4:
+        cout << "\U0001F4A7 "; // 💧 (Água)
+        break;
+      case 9:
+        cout << "\U0001F412 "; // 🐒 (Animal) 
+        break;
+      }
     }
+    cout << "\n";
+  }
 }
 ```
 
@@ -743,7 +768,7 @@ if __name__ == "__main__":
 
 ### 🗂️MakeFile
 
-Fornecido pelo professor, sofreu apenas uma leve moderação para rodar no projeto:
+Fornecido pelo professor:
 
 ```makefile
 BUILD     := build
@@ -797,6 +822,7 @@ Trabalho-Aquecimento/
 │   ├── Files.hpp
 │   ├── Files.cpp
 │   ├── main.cpp
+├── arquivos/
 │   ├── input.dat
 │   └── output.dat
 ├── build/          # Gerada automaticamente pelo Makefile
@@ -806,6 +832,7 @@ Trabalho-Aquecimento/
 ├── Makefile
 ├── matriz.py       # Script para geração de matrizes de teste
 └── README.md
+
 ```
 
 ---
@@ -815,7 +842,7 @@ Trabalho-Aquecimento/
 ### Pré-requisitos
 
 * Linux
-* GCC ≥ 9.0
+* GCC ≥ 11.0
 * Make
 
 ### Compilação e Execução
@@ -828,7 +855,7 @@ make run      # Executa a simulação
 
 ---
 
-## 🔥 Análise de Padrões de Propagação do Fogo <a name="analise-de-padroes-de-propagacao-do-fogo"></a>
+## 🔥 Análise de Padrões de Propagação do Fogo `<a name="analise-de-padroes-de-propagacao-do-fogo"></a>`
 
 ### 🌬️ Influência do Vento na Propagação
 
@@ -837,6 +864,7 @@ A simulação implementada permite analisar dois cenários distintos de propaga�
 #### Sem Vento (Propagação Ortogonal)
 
 ![Matriz sem vento](assets/semVento.png)
+
 *Figura 1: Propagação uniforme em todas as direções (cima, baixo, esquerda, direita)*
 
 - O fogo se espalha igualmente em todas as 4 direções ortogonais
@@ -941,7 +969,7 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ---
 
-## 📊 Resultados Esperados ao Final da Simulação <a name="resultados-esperados-ao-final-da-simulacao"></a>
+## 📊 Resultados Esperados ao Final da Simulação `<a name="resultados-esperados-ao-final-da-simulacao"></a>`
 
 * Registro detalhado da evolução do fogo a cada iteração.
 * Caminho percorrido pelo animal, total de passos e sobrevivência.
@@ -949,15 +977,13 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ---
 
-## 🔚 Conclusão <a name="conclusao"></a>
+## 🔚 Conclusão `<a name="conclusao"></a>`
 
 A simulação atual oferece uma boa base para entender os padrões fundamentais de propagação de incêndios florestais. A inclusão do vento adiciona um fator realista que altera significativamente a dinâmica do fogo. Para melhorias futuras, a implementação de algoritmos mais sofisticados, particularmente aqueles baseados em autômatos celulares ou aprendizado por reforço, poderia aumentar tanto a precisão quanto o valor educacional da simulação.
 
 ---
 
-
-
-## 💻 Maquina onde foi programado e testado <a name="maquina-onde-foi-programado-e-testado"></a>
+## 💻 Maquina onde foi programado e testado `<a name="maquina-onde-foi-programado-e-testado"></a>`
 
 * **Sistema operacional:**  Ubuntu 24.04.2 LTS
 * **Modelo do hardware:** Lenovo IdeaPad Gaming 3 15IHU6
@@ -966,7 +992,15 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 
 ---
 
-## 📚 Referências <a name="referencias"></a>
+## 👥 [Autores]()
+
+| Nome                          | Função      | Contato                  |
+| ----------------------------- | ------------- | ------------------------ |
+| Lucas Roseno Medeiros Araújo | Desenvolvedor | lucasroseno759@gmail.com |
+
+---
+
+## 📚 Referências `<a name="referencias"></a>`
 
 * Especificação do trabalho prático da disciplina de AED I, Prof. Michel Pires da Silva (2025)
 * cppreference.com (documentação C++)
@@ -1011,11 +1045,3 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 - **Otimização em Ambientes Dinâmicos**:
   LaValle, S. M. (2006). *Planning Algorithms*. Cambridge University Press.
   (Capítulos sobre algoritmos de busca em espaços dinâmicos)
-
----
-
-## 👥 [Autores]()
-
-| Nome                          | Função      | Contato                  |
-| ----------------------------- | ------------- | ------------------------ |
-| Lucas Roseno Medeiros Araújo | Desenvolvedor | lucasroseno759@gmail.com |
