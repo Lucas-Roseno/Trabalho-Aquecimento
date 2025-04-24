@@ -13,5 +13,5 @@ if __name__ == "__main__":
     linhas = int(input("Digite o número de linhas: "))
     colunas = int(input("Digite o número de colunas: "))
     matriz = gerar_matriz(linhas, colunas)
-    salvar_matriz_em_arquivo(matriz, "src/input.dat")
+    salvar_matriz_em_arquivo(matriz, "arquivos/input.dat")
     print("\nMatriz salva no arquivo 'input.dat'.")

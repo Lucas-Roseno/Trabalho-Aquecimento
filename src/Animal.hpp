@@ -34,7 +34,6 @@ public:
     short int encontrouAgua = 0;
 
     //funções
-    void rotaDeFuga(vector<vector<short int>> &matriz, Files &file);
     void reconstruirCaminho(short int destX, short int destY, vector<vector<short int>> &matriz);
     void movimentar(vector<vector<short int>> &matriz, Files &file, bool acessarVisitados);
 
