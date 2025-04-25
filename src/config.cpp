@@ -1,7 +1,8 @@
 #include "config.hpp"
-
+#include <locale>
 void config::executarSimulacao()
 {
+
   matriz = file.lerMatriz();
   matriz[file.focoX][file.focoY] = 2;
   file.iniciarOutput();
@@ -37,7 +38,8 @@ void config::executarSimulacao()
 
     if (animal.apagouFogo)
     {
-      dispersarUmidade(animal.posicaoAtual.first, animal.posicaoAtual.second);
+      matriz[animal.posicaoAtual.first][animal.posicaoAtual.second] = 0;
+      animal.dispersarUmidade(animal.posicaoAtual.first, animal.posicaoAtual.second, matriz, file);
     }
 
     cout << "Movimentação do fogo: " << endl;
@@ -67,7 +69,8 @@ void config::executarSimulacao()
   file.fecharOutput();
 }
 
-void config::imprimirMatriz(vector<vector<short int>> &matriz)
+template <typename T>
+void config::imprimirMatriz(vector<vector<T>> &matriz)
 {
   for (const auto &linha : matriz)
   {
@@ -75,23 +78,35 @@ void config::imprimirMatriz(vector<vector<short int>> &matriz)
     {
       switch (elemento)
       {
+      case '0':
       case 0:
         cout << "\U0001FAA8  "; // 🪨 (Espaço vazio)
         break;
+      case '1':
       case 1:
         cout << "\U0001F332 "; // 🌲 (Árvore)
         break;
+      case '2':
       case 2:
         cout << "\U0001F525 "; // 🔥 (Fogo)
         break;
+      case '3':
       case 3:
-        cout << "\U00002B1B "; //  (Bloco preto)
+        cout << "\U00002B1B "; // ⬛ (Bloco preto)
         break;
+      case '4':
       case 4:
         cout << "\U0001F4A7 "; // 💧 (Água)
         break;
+      case '9':
       case 9:
-        cout << "\U0001F412 "; // 🐒 (Animal) 
+        cout << "\U0001F412 "; // 🐒 (Animal)
+        break;
+      case '*':
+        cout << "\U0001F43E "; // 🐾 (Pegadas)
+        break;
+      default:
+        cout << elemento << " "; // Outros valores
         break;
       }
     }
@@ -120,24 +135,6 @@ void config::propagacaoFogo()
 
 vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz)
 {
-  vector<vector<pair<short int, short int>>> direcoesVento = {
-      {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}, // 0: sem vento
-      {{-1, 0}},                          // 1: cima
-      {{1, 0}},                           // 2: baixo
-      {{0, -1}},                          // 3: esquerda
-      {{0, 1}},                           // 4: direita
-      {{-1, -1}},                         // 5: cima e esquerda
-      {{-1, 1}},                          // 6: cima e direita
-      {{1, -1}},                          // 7: baixo e esquerda
-      {{1, 1}},                           // 8: baixo e direita
-      {{-1, 0}, {0, -1}, {0, 1}},         // 9: cima, esquerda e direita
-      {{-1, 0}, {1, 0}, {0, -1}},         // 10: cima, baixo e esquerda
-      {{-1, 0}, {1, 0}, {0, 1}},          // 11: cima, baixo e direita
-      {{1, 0}, {0, -1}, {0, 1}},          // 12: baixo, esquerda e direita
-      {{0, -1}, {0, 1}},                  // 13: esquerda e direita
-      {{-1, 0}, {1, 0}}                   // 14: cima e baixo
-  };
-
   for (const auto &dir : direcoesVento[direcaoVento])
   {
     short int auxX = posX + dir.first;
@@ -208,24 +205,6 @@ bool config::aindaTemFogo()
   return false;
 }
 
-void config::dispersarUmidade(short int &x, short int &y)
-{
-  matriz[x][y] = 0;
-  for (size_t i = 0; i < 4; i++)
-  {
-    short int posx = x + dx[i];
-    short int posy = y + dy[i];
-
-    if (posx >= 0 && posx < file.linhas && posy >= 0 && posy < file.colunas)
-    {
-      if (matriz[posx][posy] != 4)
-      {
-        matriz[posx][posy] = 1;
-      }
-    }
-  }
-}
-
 void config::atualizarMatrizPassos()
 {
   for (short int i = 0; i < file.linhas; i++)
@@ -236,8 +215,8 @@ void config::atualizarMatrizPassos()
       {
         animal.matrizPassos[i][j] = static_cast<char>(matriz[i][j] + '0');
       }
-      cout << animal.matrizPassos[i][j] << " ";
     }
-    cout << endl;
   }
+
+  imprimirMatriz(animal.matrizPassos);
 }

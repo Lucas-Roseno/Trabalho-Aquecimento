@@ -1,4 +1,4 @@
-![Exemplo de imagem](assets/logo.jpeg   )
+![Exemplo de imagem](assets/logo.jpeg)
 
 <h1 align="center">
    Simulação de incêndio🔥
@@ -52,760 +52,97 @@ A solução foi implementada em C++, utilizando orientação a objetos para modu
 * O animal se move com base em prioridades: água > vazio ou árvore > queimado.
 * A simulação é iterativa até não restar mais fogo.
 
-## 🛠️ [Implementação]()
+O fluxo principal da simulação inicia em  **main.cpp** , que instancia a classe `config` e chama `executarSimulacao()`. A seguir, apresentam-se as etapas-chave da execução, referenciando o arquivo onde cada função está implementada:
 
-### ⚙️config.hpp/cpp: controle da simulação e propagação do fogo.
+### ⚙️ [Classe config](src/config.hpp)
 
-#### `executarSimulacao()`
+  Principal classe do projeto. Onde é feito as configurações do vento e iterações máximas. Adiciona as classes [Animal](src/Animal.hpp) e [Files](src/Files.hpp) como objetos. Principais funções:
 
-Essa função é o coração da simulação. Ela inicializa a matriz da floresta e a posição do fogo, coordena os ciclos de movimentação do animal e propagação do fogo, e registra os estados a cada iteração até que o fogo se extinga ou o limite máximo de iterações seja atingido.
+#### 🛠️ [`void executarSimulacao()`](src/config.cpp)
 
-```cpp
+* Função central do programa, a partir dela as outras funções mais importantes serão chamadas
+* Chamas a função de leitura do input, a de gravação da matriz - em cada iteração - no output, e a gravação dos dados finais no final do loop
+* Chama a função de movimentação do animal, propagação do fogo, apaga o fogo da iteração passada e caso o animal tenha encontrado uma fonte de água, chama a função que dispersa umidade
+* Controla o loop principal, que vai até o número máximo de iterações ou não restar mais fogo na matriz
+* Imprime na tela o estado da matriz a cada iteração
 
-void config::executarSimulacao()
-  {
-    // Inicializa a matriz a partir do arquivo e define o foco inicial do fogo
-    matriz = file.lerMatriz();
-    matriz[file.focoX][file.focoY] = 2;
-    file.iniciarOutput();
+#### 🔥 [`void propagacaoFogo()`](src/config.cpp)
 
-    // Exibe a matriz de entrada
-    cout << "\nMatriz de entrada:" << endl;
-    imprimirMatriz(matriz);
+* Função que chama a função que realmente vai espalhar o fogo(decidi implemtar assim para facilitar a compreensão do código e matê-lo mais limpo e elegante) e controla o vetor que contém as cédulas que serão transformadas em carvão na próxima iteração
+* Utilizando 2 for aninhados, verifica cada cédula da matriz procurando pelo valor 2, caso encontre, chama a função de espalhar o fogo e adiciona aquela posição ao vetor que contém as posições que deverão ser apagadas na próxima iteração
+* Cria uma cópia da matriz principal que o programe não trate os novos pontos de fogo e espalhe eles na mesma iteração
 
-    // Inicializa o animal na matriz
-    animal.inicializador(matriz, file);
-    imprimirMatriz(animal.matrizAnimal);
+#### 🌬️🔥 [`vector<vector<short int>> espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz)`](src/config.cpp)
 
-    // Loop principal da simulação
-    while (aindaTemFogo() && iteracao < IteracoesMax)
-    {
-      // Movimenta o animal se ele ainda não morreu
-      if (!animal.morreu)
-      {
-        animal.movimentar(matriz, file, false);
-      }
+* Responsável por espalhar o fogo de cada foco, de acordo com a configuração de vento definida no hpp
+* Recebe a posição do ponto de fogo que vai espalhar e a cópia da matriz principal
+* No [config.hpp](src/config.cpp) há uma matriz já definida com os possíveis tipo de vento que o programa trata. Cada linha da matriz representa um tipo de vento, que é as direções que serão exploradas dentro do for principal. A variável `direcaoVento` defini qual linha dessa matriz será utilizada.
+* Dentro do for, é verificado se a casa que será incendiada contem o animal, caso contenha, é dado a segunda chance de escapar para o animal. Se ele não conseguir escapar, verifica se a casa em que ele está é 0, caso afirmativo ele pode ficar 3 iterações parado nela. Se a casa não for 0, siginfica que ele está encurralado pelo fogo e logicamente morreu.
+* *Note que não há necessidade de tratar o caso onde o animal fica parado por mais 3 de iterações nesse código, pois um chama dura somente 2 iterações, o animal pode explorar casas já queimadas e como ele está sempre explorando, não irá ocorrer o caso em que quando o fogo o encurralar ele já esteja parado. Esse ponto ficará mais claro na explicação da função de movimentar do animal.
 
-      // Exibe a iteração atual e a movimentação do animal
-      cout << "\nITERAÇÃO " << iteracao << ":" << endl;
-      cout << "Movimentação do animal: " << endl;
-      imprimirMatriz(animal.matrizAnimal);
+#### 🖨️ [`void imprimirMatriz(vector<vector<T>> &matriz)`](src/config.cpp)
 
-      // Apaga os fogos da última iteração
-      for (const auto &fogo : fogoInicial)
-      {
-        matriz[fogo.first][fogo.second] = 3;
-        file.movimentoFogo(fogo.first, fogo.second, 3, -1, -1);
-      }
+* Função de imprimir as matrizes. Foi trocado os número por emojis para facilitar a visualização no terminal.
 
-      // Propaga o fogo para a próxima iteração
-      propagacaoFogo();
+  ```
+  0 -> 🪨 (Espaço vazio)
+  1 -> 🌲 (Árvore)
+  2 -> 🔥 (Fogo)
+  3 -> ⬛ (Queimada)
+  4 -> 💧 (Água)
+  9 -> 🐒 (Animal)
+  * -> 🐾 (Pegadas)
+  ```
 
-      // Dispersa umidade se o animal apagou o fogo
-      if (animal.apagouFogo)
-      {
-        dispersarUmidade(animal.posicaoAtual.first, animal.posicaoAtual.second);
-      }
+### 🐒 [Classe Animal](src/Animal.hpp)
 
-      // Exibe a movimentação do fogo
-      cout << "Movimentação do fogo: " << endl;
-      imprimirMatriz(matriz);
+  Classe onde contém a lógica de movimentação do animal. Principais funções:
 
-      cout << "====================================" << endl;
+#### 🍃🐒 [`void movimentar(vector<vector<short int>> &matriz, Files &file, bool acessarVisitados)`](src/Animal.cpp)
 
-      // Incrementa o contador de iterações
-      iteracao++;
+* Principal função da classe, controla a movimentação do animal.
+* Recebe, por referência, a matriz principal e faz uma cópia dela para a matrizAnimal - para manter os fogos atualizados - recebe o objeto do file - para saber o número de linhas e colunas - e a condição acessarVisitados, usada para quando o animal está sem opção de movimentação, acessar as casas que ele já visitou.
+* Explora as casas ortogonais ao animal e guarda o valor e posição dessas casas em dois vetores, que são passados como referência para a função `melhorOpcao`
+* Se a função `melhorOpcao` retornar um valor difirente de -1, o animal ira movimentar para a melhor posição. Se retornar -1, siginifica que o animal está cercado por fogo.
+* Se na movimentação o animal encontrar água, chama a função de `dispersarUmidade`
 
-      // Grava o estado atual da matriz no arquivo
-      file.gravarIteracao(iteracao, matriz);
-    }
+#### 🔮 [`short int melhorOpcao(vector<short int> &valorAdjacente, vector<pair<short int, short int>> &posicaoAdjacente, vector<vector<bool>> &visitados, bool acessarVisitados);`](src/Animal.cpp)
+* Função que decide qual a melhor a casa para ser explorada
+* Recebe como parâmetro os vetores que contém o valor e a posição de cada casa ortogonal a posição atual do animal, a matriz de casas já visitadas e o booleano para saber se pode acessar essas casas.
+* Segue a ordem: água > vazio ou árvore > queimado.
+* Retorna -1 se o animal está cercado por fogo
 
-    // Exibe o caminho percorrido pelo animal
-    cout << "Caminho percorrido pelo animal: " << endl;
-    atualizarMatrizPassos();
-    cout << "Total de passos: " << animal.passos << endl;
-    cout << "Quantidade de vezes que encontrou água: " << animal.encontrouAgua << endl;
+#### 💧 [`void dispersarUmidade(short int &x, short int &y, vector<vector<short int>> &matriz, Files &file)`](src/Animal.cpp)
 
-    // Exibe a condição final do animal
-    cout << "Condição final do animal: " << (animal.morreu ? "morreu" : "sobreviveu") << endl;
-    if (animal.morreu)
-    {
-      cout << "Iteração em que o animal morreu: " << animal.iteracaoMorte;
-    }
+* Caso o animal encontre uma posição que contenha água, valor 4, ele deve dispersar a umidade, tornando as casas ortogonais em 1 e casa em que ele está vira 0.
 
-    // Grava os dados finais do animal no arquivo
-    file.dadosFinaisAnimal(animal.matrizPassos, animal.passos, animal.morreu,
-                 animal.iteracaoMorte, animal.encontrouAgua);
-
-    // Fecha o arquivo de saída
-    file.fecharOutput();
-  }
-```
-
----
-
-#### `propagacaoFogo()`
-
-Responsável por atualizar o estado do fogo na floresta. Essa função varre toda a matriz para encontrar células em chamas (valor `2`) e chama `espalharFogo()` para cada uma delas. Além disso, armazena a posição das células incendiadas para posterior marcação como queimadas (`3`).
-
-```cpp
-void config::propagacaoFogo() {
-    fogoInicial.clear();                                // Limpa lista de fogos da iteração anterior
-    vector<vector<short int>> novaMatriz = matriz;      // Cria cópia da matriz original para atualizar o fogo
-
-    for (int i = 0; i < file.linhas; i++) {
-        for (int j = 0; j < file.colunas; j++) {
-            if (matriz[i][j] == 2) {                     // Se a célula está em chamas
-                novaMatriz = espalharFogo(i, j, novaMatriz); // Espalha o fogo a partir dela
-                fogoInicial.push_back(make_pair(i, j));  // Armazena posição da célula em chamas
-            }
-        }
-    }
-
-    matriz = novaMatriz;                                // Atualiza a matriz principal com o novo estado
-}
-```
-
----
-
-#### `espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz)`
-
-Realiza a lógica de propagação do fogo a partir de uma célula específica, levando em conta a direção do vento. Se o animal estiver na área de propagação, é forçado a se mover ou pode morrer. Células com valor `1` (vegetação) se tornam `2` (em chamas) se atingidas.
-
-```cpp
-vector<vector<short int>> config::espalharFogo(int posX, int posY, vector<vector<short int>> novaMatriz) {
-    // Direções de propagação possíveis para cada tipo de vento (0 = sem vento, 1-14 = direções específicas)
-    vector<vector<pair<short int, short int>>> direcoesVento = {
-        {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}, // 0: sem vento (ortogonal)
-        {{-1, 0}},                          // 1: cima
-        {{1, 0}},                           // 2: baixo
-        {{0, -1}},                          // 3: esquerda
-        {{0, 1}},                           // 4: direita
-        {{-1, -1}},                         // 5: cima e esquerda
-        {{-1, 1}},                          // 6: cima e direita
-        {{1, -1}},                          // 7: baixo e esquerda
-        {{1, 1}},                           // 8: baixo e direita
-        {{-1, 0}, {0, -1}, {0, 1}},         // 9: cima, esquerda e direita
-        {{-1, 0}, {1, 0}, {0, -1}},         // 10: cima, baixo e esquerda
-        {{-1, 0}, {1, 0}, {0, 1}},          // 11: cima, baixo e direita
-        {{1, 0}, {0, -1}, {0, 1}},          // 12: baixo, esquerda e direita
-        {{0, -1}, {0, 1}},                  // 13: esquerda e direita
-        {{-1, 0}, {1, 0}}                   // 14: cima e baixo
-    };
-
-    for (const auto &dir : direcoesVento[direcaoVento]) {
-        short int auxX = posX + dir.first;
-        short int auxY = posY + dir.second;
-
-        // Verifica se o animal está na posição que será incendiada
-        if (auxX >= 0 && auxX < file.linhas &&
-            auxY >= 0 && auxY < file.colunas &&
-            animal.matrizAnimal[auxX][auxY] == 9 && animal.valorAnterior == 1) {
-  
-            // Força o animal a fazer um segundo movimento emergencial
-            animal.movimentar(novaMatriz, file, true);
-
-            // Verifica se ele tem para onde fugir
-            if (animal.valorI == -1) {
-                if (animal.valorAnterior == 0 && animal.tempoParado < 3) {
-                    cout << "Como o valor da casa é 0 ele pode ficar parado por 3 iterações" << endl;
-                    cout << "Número de iterações parado: " << animal.tempoParado;
-                } else {
-                    cout << "Não há casas sem fogo ao redor e a casa atual é igual a 1." << endl;
-                    cout << "Animal morreu!" << endl;
-                    animal.morreu = true;
-                    animal.iteracaoMorte = iteracao;
-                }
-            } else {
-                cout << "Fogo atingiu a casa do animal e ele deu o 2 movimento." << endl;
-            }
-
-            // Marca a célula com fogo e registra no output
-            novaMatriz[auxX][auxY] = 2;
-            animal.matrizAnimal[auxX][auxY] = 2;
-            file.movimentoFogo(auxX, auxY, 2, dir.first, dir.second);
-
-            imprimirMatriz(animal.matrizAnimal);
-            cout << "\n";
-        }
-
-        // Caso normal: célula adjacente contém árvore saudável (1)
-        if (auxX >= 0 && auxX < file.linhas &&
-            auxY >= 0 && auxY < file.colunas &&
-            novaMatriz[auxX][auxY] == 1) {
-  
-            novaMatriz[auxX][auxY] = 2;
-            file.movimentoFogo(auxX, auxY, 2, dir.first, dir.second);
-        }
-    }
-
-    return novaMatriz;
-}
-
-```
-
----
-
-#### `aindaTemFogo()`
-
-Verifica se ainda há fogo na floresta. A simulação continua enquanto essa função retornar `true`.
-
-```cpp
-bool config::aindaTemFogo() {
-    for (int i = 0; i < file.linhas; i++) {
-        for (int j = 0; j < file.colunas; j++) {
-            if (matriz[i][j] == 2) {     // Existe célula em chamas
-                return true;
-            }
-        }
-    }
-
-    cout << "Não há mais fogo na matriz." << endl;
-    return false;
-}
-```
-
----
-
-#### `dispersarUmidade(short int &x, short int &y)`
-
-Simula o animal jogando água ao seu redor após apagar o fogo. A célula onde ele está fica vazia (0), e as adjacentes (exceto barreiras) recebem umidade (`1`), dificultando a propagação do fogo.
-
-```cpp
-void config::dispersarUmidade(short int &x, short int &y) {
-    matriz[x][y] = 0; // Célula onde está o animal fica vazia
-
-    for (size_t i = 0; i < 4; i++) {
-        short int posx = x + dx[i];
-        short int posy = y + dy[i];
-
-        if (posx >= 0 && posx < file.linhas && posy >= 0 && posy < file.colunas) {
-            if (matriz[posx][posy] != 4) { 
-                matriz[posx][posy] = 1;    // Define vegetação úmida
-            }
-        }
-    }
-}
-```
-
----
-
-#### `imprimirMatriz(vector<vector<short int>> &matriz)`
-
-Função auxiliar que imprime a matriz no terminal, utilizada para depuração. Foi utilizado caracteres para facilitar a visualização da propagação do fogo, não mudando a matriz original apenas na hora da impressão.
-
-```cpp
-void config::imprimirMatriz(vector<vector<short int>> &matriz)
-{
-  for (const auto &linha : matriz)
-  {
-    for (const auto &elemento : linha)
-    {
-      switch (elemento)
-      {
-      case 0:
-        cout << "\U0001FAA8  "; // 🪨 (Espaço vazio)
-        break;
-      case 1:
-        cout << "\U0001F332 "; // 🌲 (Árvore)
-        break;
-      case 2:
-        cout << "\U0001F525 "; // 🔥 (Fogo)
-        break;
-      case 3:
-        cout << "\U00002B1B "; //  (Bloco preto)
-        break;
-      case 4:
-        cout << "\U0001F4A7 "; // 💧 (Água)
-        break;
-      case 9:
-        cout << "\U0001F412 "; // 🐒 (Animal) 
-        break;
-      }
-    }
-    cout << "\n";
-  }
-}
-```
-
----
-
-#### `atualizarMatrizPassos()`
-
-Atualiza e imprime a matriz de passos do animal ao final da simulação. Substitui os valores por caracteres para representar o caminho percorrido.
-
-```cpp
-void config::atualizarMatrizPassos() {
-    for (short int i = 0; i < file.linhas; i++) {
-        for (short int j = 0; j < file.colunas; j++) {
-            if (animal.matrizPassos[i][j] != '*' && animal.matrizPassos[i][j] != '9') {
-                animal.matrizPassos[i][j] = static_cast<char>(matriz[i][j] + '0');
-            }
-            cout << animal.matrizPassos[i][j] << " ";
-        }
-        cout << endl;
-    }
-}
-```
-
----
-
-### `🐿️ Animal.hpp/cpp`: Lógica de movimentação, busca por água e sobrevivência
-
-#### `inicializador(vector<vector<short int>> &matriz, Files &file)`
-
-Esta função inicializa o estado do animal dentro da matriz da floresta, posicionando-o em uma célula vazia (`0`). Ela também define as estruturas de dados para o rastreamento de passos e células visitadas, marcando a posição inicial do animal e a inserindo na matriz com o valor `9` para indicar sua presença.
-
-```cpp
-void Animal::inicializador(vector<vector<short int>> &matriz, Files &file)
-{
-    visitados.resize(file.linhas, vector<bool>(file.colunas, false));  // Cria a matriz de visitados, inicializada como falsa
-    matrizPassos.resize(file.linhas, vector<char>(file.colunas));      // Cria a matriz de passos para o animal
-
-    matrizAnimal = matriz;  // A matriz original é copiada para o estado do animal
-
-    // Procura por uma célula vazia (valor 0) para posicionar o animal
-    for (short int i = 0; i < file.linhas; i++)
-    {
-        for (short int j = 0; j < file.colunas; j++)
-        {
-            matrizPassos[i][j] = static_cast<char>(matriz[i][j] + '0');  // Copia o valor da matriz original para a matriz de passos
-
-            if (matriz[i][j] == 0 && posicaoAtual.first == -1)  // Se encontrar uma célula vazia e o animal ainda não tiver sido posicionado
-            {
-                posicaoAtual = make_pair(i, j);  // Define a posição inicial do animal
-                matrizAnimal[i][j] = 9;  // Marca o animal na matriz com valor 9
-                matrizPassos[i][j] = '9';  // Atualiza a matriz de passos
-                visitados[i][j] = true;  // Marca a célula como visitada
-                cout << "\nPosição do animal: " << posicaoAtual.first << ", "
-                     << posicaoAtual.second << endl;
-            }
-        }
-    }
-}
-```
-
----
-
-#### `movimentar(vector<vector<short int>> &matriz, Files &file, bool acessarVisitados)`
-
-Essa função é responsável pelo movimento do animal. Ela calcula os valores das células adjacentes, escolhe a melhor célula para o animal se mover com base em um critério (preferência por água, depois por áreas vazias ou árvores, e por último áreas queimadas), e então move o animal para a célula selecionada.
-
-Observe que não é necessário tratar a situação em que o tempo parado do animal desja maior que 3, visto que ele só ficará parado se estiver encurralado pelo fogo e a cédula em que está seja 0 (se for 1, ele morre), e levando em consideração que uma árvore gasta duas iterações para ser queimada e virar 3, a situação em que o animal fica mais de 3 iterações parado não acontece nessa implementação.
-
-```cpp
-void Animal::movimentar(vector<vector<short int>> &matriz, Files &file, bool acessarVisitados)
-{
-    matrizAnimal = matriz;  // Atualiza a matriz com a posição atual do animal
-    matrizAnimal[posicaoAtual.first][posicaoAtual.second] = 9;  // Marca a célula atual como ocupada pelo animal
-
-    apagouFogo = false;  // Reseta o estado de se o animal apagou fogo
-
-    valorAdjacente.clear();  // Limpa os valores adjacentes
-    posicaoAdjacente.clear();  // Limpa as posições adjacentes
-
-    short int posx = -1;
-    short int posy = -1;
-
-    // Verifica as 4 direções ao redor do animal
-    for (size_t i = 0; i < 4; i++)
-    {
-        posx = posicaoAtual.first + dx[i];  // Calcula a posição adjacente
-        posy = posicaoAtual.second + dy[i];
-
-        // Se a posição adjacente for válida, armazena os valores e posições
-        if (posx >= 0 && posx < file.linhas && posy >= 0 && posy < file.colunas)
-        {
-            valorAdjacente.push_back(matrizAnimal[posx][posy]);
-            posicaoAdjacente.push_back(pair(posx, posy));
-        }
-    }
-
-    valorI = melhorOpcao(valorAdjacente, posicaoAdjacente, visitados, acessarVisitados);  // Determina a melhor opção de movimento
-
-    if (valorI != -1)
-    {
-        posx = posicaoAdjacente[valorI].first;
-        posy = posicaoAdjacente[valorI].second;
-
-        // Atualiza a matriz e a posição do animal
-        matrizAnimal[posicaoAtual.first][posicaoAtual.second] = valorAnterior;
-        matrizAnimal[posx][posy] = 9;
-
-        visitados[posicaoAtual.first][posicaoAtual.second] = true;
-
-        // Atualiza a matriz de passos
-        matrizPassos[posicaoAtual.first][posicaoAtual.second] = '*';
-        matrizPassos[posx][posy] = '9';
-
-        passos++;  // Incrementa o número de passos do animal
-        tempoParado = 0;  // Reseta o tempo parado
-
-        valorAnterior = valorAdjacente[valorI];  // Atualiza o valor da célula anterior
-
-        // Se o animal encontrou água, dispersa umidade
-        if (valorAnterior == 4)
-        {
-            dispersarUmidade(posx, posy, matrizAnimal, file);
-            apagouFogo = true;  // Marca que o animal apagou fogo
-            encontrouAgua++;  // Conta o número de vezes que o animal encontrou água
-        }
-
-        posicaoAtual = pair(posx, posy);  // Atualiza a posição do animal
-    }
-    else
-    {
-        tempoParado++;  // Incrementa o tempo parado caso não haja movimento
-    }
-}
-```
-
----
-
-#### `melhorOpcao(vector<short int> &valorAdjacente, vector<pair<short int, short int>> &posicaoAdjacente, vector<vector<bool>> &visitados, bool acessarVisitados)`
-
-Essa função avalia as opções de movimento disponíveis, priorizando a água (`4`), depois espaços vazios (`0`) ou árvores (`1`), e por último áreas queimadas (`3`). Se nenhuma célula válida for encontrada, retorna `-1`.
-
-```cpp
-short int Animal::melhorOpcao(vector<short int> &valorAdjacente,
-                              vector<pair<short int, short int>> &posicaoAdjacente, vector<vector<bool>> &visitados,
-                              bool acessarVisitados)
-{
-    short int posicao1ou0 = -1;
-    short int posicao3 = -1;
-
-    // Avalia as opções de movimento
-    for (size_t i = 0; i < valorAdjacente.size(); i++)
-    {
-        short int x = posicaoAdjacente[i].first;
-        short int y = posicaoAdjacente[i].second;
-
-        // Prioriza a água
-        if (valorAdjacente[i] == 4)
-        {
-            return i;
-        }
-        // Se for vazio ou árvore e o animal não visitou a célula, prioriza
-        else if ((valorAdjacente[i] == 1 || valorAdjacente[i] == 0) &&
-                 (acessarVisitados || !visitados[x][y]) && posicao1ou0 == -1)
-        {
-            posicao1ou0 = i;
-        }
-        // Se for queimado e o animal não visitou a célula, prioriza
-        else if (valorAdjacente[i] == 3 &&
-                 (acessarVisitados || !visitados[x][y]) && posicao3 == -1)
-        {
-            posicao3 = i;
-        }
-    }
-
-    // Se houver uma posição válida, retorna a posição
-    if (posicao1ou0 != -1)
-    {
-        return posicao1ou0;
-    }
-    if (posicao3 != -1)
-    {
-        return posicao3;
-    }
-
-    return -1;  // Se nenhuma célula válida for encontrada, retorna -1
-}
-```
-
----
-
-#### `dispersarUmidade(short int &x, short int &y, vector<vector<short int>> &matriz, Files &file)`
-
-Esta função simula o ato de o animal dispersar umidade ao seu redor, apagando o fogo nas células adjacentes (exceto barreiras) e tornando-as mais resistentes à propagação de fogo.
-
-```cpp
-void Animal::dispersarUmidade(short int &x, short int &y, vector<vector<short int>> &matriz,
-                              Files &file)
-{
-    valorAnterior = 0;  // Define que a célula onde o animal está será vazia
-
-    // Dispersa umidade nas 4 células adjacentes
-    for (size_t i = 0; i < 4; i++)
-    {
-        short int posx = x + dx[i];
-        short int posy = y + dy[i];
-
-        // Se a célula for válida, aplica a umidade (transforma em vegetação saudável)
-        if (posx >= 0 && posx < file.linhas && posy >= 0 && posy < file.colunas)
-        {
-            if (matriz[posx][posy] != 4)  // Não aplica umidade em água
-            {
-                matriz[posx][posy] = 1;  // Marca como vegetação saudável (umidade)
-            }
-        }
-    }
-}
-```
-
-### 📁Files.hpp/.cpp: Leitura e Gravação de Dados
-
----
-
-#### `lerMatriz()`
-
-Lê a configuração inicial da floresta (dimensões e foco de fogo) e o estado de cada célula a partir de `src/input.dat`.
-
-```cpp
-vector<vector<short int>> Files::lerMatriz()
-{
-    try
-    {
-        ifstream arquivoEntrada("src/input.dat");                // Abre o arquivo de entrada
-        if (!arquivoEntrada)
-        {
-            throw runtime_error("Arquivo não encontrado");       // Exceção se o arquivo não estiver disponível
-        }
-
-        string linha;
-        if (getline(arquivoEntrada, linha))                        // Lê a primeira linha com dimensões e foco
-        {
-            stringstream ss(linha);                                // Stream para extrair valores
-
-            ss >> linhas >> colunas >> focoX >> focoY;            // Define linhas, colunas e posição inicial do fogo
-
-            if (linhas <= 0 || colunas <= 0)
-            {
-                throw runtime_error("Dimensões da matriz inválidas."); // Verificação de integridade
-            }
-
-            // Inicializa a matriz com as dimensões lidas
-            vector<vector<short int>> matriz(linhas, vector<short int>(colunas));
-
-            // Preenche cada célula com o valor lido do arquivo
-            for (int i = 0; i < linhas; i++)
-            {
-                for (int j = 0; j < colunas; j++)
-                {
-                    arquivoEntrada >> matriz[i][j];                 // Lê o estado da célula (0,1,...) e armazena
-                }
-            }
-            return matriz;                                          // Retorna a matriz completa
-        }
-    }
-    catch (const exception &e)
-    {
-        cout << e.what() << endl;                                 // Exibe mensagem de erro no console
-    }
-    return vector<vector<short int>>();                         // Retorna matriz vazia em caso de falha
-}
-```
-
----
-
-#### `iniciarOutput()`
-
-Abre o arquivo de saída `src/output.dat` e escreve o cabeçalho inicial.
-
-```cpp
-void Files::iniciarOutput() {
-    arquivoSaida.open("src/output.dat");                       // Cria/abre o arquivo de saída
-    if (!arquivoSaida) {
-        cerr << "Erro ao criar arquivo de saída!" << endl;     // Erro se não conseguir abrir
-        return;
-    }
-    arquivoSaida << "RESULTADO DA SIMULAÇÃO: \n\n";          // Cabeçalho para o relatório
-}
-```
-
----
-
-#### `gravarIteracao(int &iteracao, vector<vector<short int>> &matrizFogo)`
-
-Registra no arquivo de saída o estado completo da floresta na iteração atual.
-
-```cpp
-void Files::gravarIteracao(int &iteracao, vector<vector<short int>> &matrizFogo) {
-    if (!arquivoSaida.is_open()) {
-        cerr << "Erro: arquivo de saída não está aberto!" << endl;
-        return;                                                  // Garante que o arquivo esteja aberto
-    }
-
-    arquivoSaida << "Iteração: " << iteracao << endl;         // Cabeçalho da iteração
-
-    // Imprime toda a matriz linha por linha
-    for (short int i = 0; i < linhas; i++) {
-        for (short int j = 0; j < colunas; j++) {
-            arquivoSaida << matrizFogo[i][j] << " ";            // Valor de cada célula
-        }
-        arquivoSaida << endl;
-    }
-
-    arquivoSaida << endl;                                       // Linha em branco entre iterações
-}
-```
-
----
-
-#### `movimentoFogo(short int x, short int y, short int valor, short int dx, short int dy)`
-
-Anota no relatório cada célula que mudou para chamas, incluindo direção de propagação.
-
-```cpp
-void Files::movimentoFogo(short int x, short int y, short int valor, short int dx, short int dy){  
-    arquivoSaida << "- (" << x << ", " << y << ") vira " << valor; // Posição e novo estado
-    string msg = definirDirecao(dx, dy);                             // Obtém descrição da direção
-    if (msg != "")
-    {
-        arquivoSaida << " (" << msg << ")";                      // Anexa a direção, se válida
-    }
-    arquivoSaida << endl;
-}
-```
-
----
-
-#### `definirDirecao(short int &dx, short int &dy)`
-
-Retorna uma string representando a direção do movimento com base nos deslocamentos `dx` e `dy`.
-
-```cpp
-string Files::definirDirecao(short int &dx, short int &dy){
-    if (dx == -1 && dy == 0)      return "acima";                // Movimento para cima
-    else if (dx == 1 && dy == 0)  return "abaixo";               // Movimento para baixo
-    else if (dx == 0 && dy == -1) return "esquerda";             // Movimento para esquerda
-    else if (dx == 0 && dy == 1)  return "direita";              // Movimento para direita
-    else if (dx == -1 && dy == -1) return "";                    // Caso diagonal ignorado
-    return "direção inválida";                                   // Qualquer outro caso
-}
-```
-
----
-
-#### `fecharOutput()`
-
-Fecha o fluxo de saída, garantindo que o arquivo seja encerrado corretamente.
-
-```cpp
-void Files::fecharOutput() {
-    if (arquivoSaida.is_open()) {
-        arquivoSaida.close();                                     // Fecha o arquivo, liberando recursos
-    }
-}
-```
-
----
-
-#### `dadosFinaisAnimal(vector<vector<char>> &matrizPassos, short int passos, bool morreu, short int iteracaoMorte, short int encontrouAgua)`
-
-Escreve os resultados finais da travessia do animal: caminho, passos, encontros com água e condição.
-
-```cpp
-void Files::dadosFinaisAnimal(vector<vector<char>> &matrizPassos, short int passos,
-    bool morreu, short int iteracaoMorte, short int encontrouAgua){
-    arquivoSaida << "DADOS FINAIS: " << endl;
-    arquivoSaida << "Caminho percorrido pelo animal: " << endl;
-
-    // Desenha a matriz de passos com caracteres
-    for (short int i = 0; i < linhas; i++) {
-        for (short int j = 0; j < colunas; j++) {
-            arquivoSaida << matrizPassos[i][j] << " ";
-        }
-        arquivoSaida << endl;
-    }
-  
-    arquivoSaida << "Total de passos: " << passos << endl;             // Total de movimentos
-    arquivoSaida << "Quantidade de vezes que encontrou água: " << encontrouAgua << endl;
-
-    arquivoSaida << "Condição final do animal: " << (morreu ? "morreu" : "sobreviveu") << endl;
-    if (morreu)
-    {
-        arquivoSaida << "Iteração em que o animal morreu: " << iteracaoMorte;
-    }
-}  
-```
-
----
-
-### 👑main.cpp: Chamada do código
-
-A única função do main é chamada da função principal do código:
-
-```cpp
-#include "config.hpp"
-#include "Files.hpp"
-#include <vector>
-
-int main (){
-    config floresta;
-    floresta.executarSimulacao();
-}
-```
-
+### 📁 [Classe Files](src/Files.hpp)
+  Leitura e gravação dos arquivos [input.dat](arquivos/input.dat) e [output.dat](arquivos/output.dat)
 ---
 
 ## ➕Arquivos adicionais:
 
-### 🐍 matriz.py
+### 🐍 [matriz.py](matriz.py)
 
 Feito apenas para facilitar o processo de teste, onde ele gera matrizes de qualquer dimensão para serem testadas. Como não era especificado no trabalho, foi feito em python para facilitar o desenvolvimento.
 
-```python
-import random
+### 🗂️ [Makefile](Makefile)
 
-def gerar_matriz(linhas, colunas):
-    return [[random.choices([0, 1, 4], weights=[1, 3, 0.1])[0] for _ in range(colunas)] for _ in range(linhas)]
+Fornecido pelo professor, usado para compilar e executar o projeto.
 
-def salvar_matriz_em_arquivo(matriz, arquivo):
-    with open(arquivo, "w") as f:
-        f.write(f"{len(matriz)} {len(matriz[0])} 1 1\n")  
-        for linha in matriz:
-            f.write(" ".join(map(str, linha)) + "\n")
+##### Pré-requisitos
 
-if __name__ == "__main__":
-    linhas = int(input("Digite o número de linhas: "))
-    colunas = int(input("Digite o número de colunas: "))
-    matriz = gerar_matriz(linhas, colunas)
-    salvar_matriz_em_arquivo(matriz, "src/input.dat")
-    print("\nMatriz salva no arquivo 'input.dat'.")
+* Linux
+* GCC ≥ 11.0
+* Make
 
-```
+##### Compilação e Execução
 
-### 🗂️MakeFile
-
-Fornecido pelo professor:
-
-```makefile
-BUILD     := build
-OBJ_DIR   := $(BUILD)/objects
-APP_DIR   := $(BUILD)
-TARGET    := app
-INCLUDE   := -Iinclude/
-SRC       := $(wildcard src/*.cpp)
-OBJECTS   := $(patsubst src/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
-
-CXX       := g++
-CXXFLAGS  := -Wall -Wextra -Werror
-LDFLAGS   := -lm
-
-all: clean $(APP_DIR)/$(TARGET)
-	@clear
-	@echo "Executando $(APP_DIR)/$(TARGET)..."
-	@./$(APP_DIR)/$(TARGET)
-
-$(OBJ_DIR)/%.o: src/%.cpp
-	@mkdir -p $(dir $@)
-	@$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-
-$(APP_DIR)/$(TARGET): $(OBJECTS)
-	@mkdir -p $(dir $@)
-	@$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
-	@chmod +x $@
-
-clean:
-	@rm -rf $(BUILD)
-
-run: $(APP_DIR)/$(TARGET)
-	@clear
-	@./$(APP_DIR)/$(TARGET)
-
-.PHONY: all clean run
-
+```bash
+make clean    # Limpa os arquivos anteriores
+make          # Compila o projeto
+make run      # Executa a simulação
+make all      # Limpa, compila e executa de uma vez só
 ```
 
 ---
@@ -837,24 +174,6 @@ Trabalho-Aquecimento/
 
 ---
 
-## 🚀 [Como Executar]()
-
-### Pré-requisitos
-
-* Linux
-* GCC ≥ 11.0
-* Make
-
-### Compilação e Execução
-
-```bash
-make clean    # Limpa os arquivos anteriores
-make          # Compila o projeto
-make run      # Executa a simulação
-```
-
----
-
 ## 🔥 [Análise de Padrões de Propagação do Fogo]()
 
 ### 🌬️ Influência do Vento na Propagação
@@ -879,7 +198,7 @@ A simulação implementada permite analisar dois cenários distintos de propaga�
 *Figura 2: Propagação influenciada por vento (neste caso, vento para direita)*
 
 - O fogo se espalha preferencialmente na direção do vento
-- Áreas queimadas são mais irregulares e extensas
+- Áreas queimadas são mais irregulares
 
 ### ⏱️ Previsão do Tamanho do Incêndio
 
@@ -893,12 +212,12 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
    ```
 
-   | Tipo de Vento        | Direções Ativas     | Fórmula Área       | Crescimento |
-   |----------------------|---------------------|--------------------|-------------|
-   | Sem vento            | Todas as 4          | 2t² + 2t + 1       | Quadrático  |
-   | Vento único          | 1 direção           | t + 1              | Linear      |
-   | Vento em L           | 2 direções          | t²/2 + 3t/2 + 1    | Quadrático  |
-   | Vento em leque       | 3 direções          | 3t²/4 + 2t + 1     | Quadrático  |
+   | Tipo de Vento  | Direções Ativas | Fórmula Área    | Crescimento |
+   | -------------- | --------------- | --------------- | ----------- |
+   | Sem vento      | Todas as 4      | 2t² + 2t + 1    | Quadrático  |
+   | Vento único    | 1 direção       | t + 1           | Linear      |
+   | Vento em L     | 2 direções      | t²/2 + 3t/2 + 1 | Quadrático  |
+   | Vento em leque | 3 direções      | 3t²/4 + 2t + 1  | Quadrático  |
 
    ```
 3. **Fatores Limitantes**:
@@ -957,13 +276,13 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ### 📈 Comparação de Desempenho
 
-| Algoritmo            | Complexidade    | Realismo   | Adequação |
-| -------------------- | --------------- | ---------- | ----------- |
-| Atual (Ortogonal)    | O(n²)          | Médio     | Boa         |
-| Dijkstra             | O(n log n)      | Alto       | Ótima      |
-| Percolação         | O(n³)          | Alto       | Regular     |
-| Autômatos Celulares | O(kn²)         | Alto       | Boa         |
-| Aprendizado          | O(n²) + treino | Muito Alto | Excelente   |
+| Algoritmo           | Complexidade   | Realismo   | Adequação |
+| ------------------- | -------------- | ---------- | --------- |
+| Atual (Ortogonal)   | O(n²)          | Médio      | Boa       |
+| Dijkstra            | O(n log n)     | Alto       | Ótima     |
+| Percolação          | O(n³)          | Alto       | Regular   |
+| Autômatos Celulares | O(kn²)         | Alto       | Boa       |
+| Aprendizado         | O(n²) + treino | Muito Alto | Excelente |
 
 *Tabela 1: Comparação entre abordagens possíveis*
 
@@ -994,8 +313,8 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 
 ## 👥 [Autores]()
 
-| Nome                          | Função      | Contato                  |
-| ----------------------------- | ------------- | ------------------------ |
+| Nome                         | Função        | Contato                  |
+| ---------------------------- | ------------- | ------------------------ |
 | Lucas Roseno Medeiros Araújo | Desenvolvedor | lucasroseno759@gmail.com |
 
 ---

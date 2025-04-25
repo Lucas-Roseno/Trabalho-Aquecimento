@@ -34,9 +34,7 @@ public:
     short int encontrouAgua = 0;
 
     //funções
-    void reconstruirCaminho(short int destX, short int destY, vector<vector<short int>> &matriz);
     void movimentar(vector<vector<short int>> &matriz, Files &file, bool acessarVisitados);
-
     short int melhorOpcao(vector<short int> &valorAdjacente,
                           vector<pair<short int, short int>> &posicaoAdjacente,
                           vector<vector<bool>> &visitados, bool acessarVisitados);

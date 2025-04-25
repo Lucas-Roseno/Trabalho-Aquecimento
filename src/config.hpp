@@ -20,9 +20,28 @@ private:
     int iteracao = 0;
     vector<pair<int, int>> fogoInicial;
 
-    // As direções do vento estão no .cpp. Varia de 0 a 14
+    // Possíveis direções
+    vector<vector<pair<short int, short int>>> direcoesVento = {
+        {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}, // 0: sem vento
+        {{-1, 0}},                          // 1: cima
+        {{1, 0}},                           // 2: baixo
+        {{0, -1}},                          // 3: esquerda
+        {{0, 1}},                           // 4: direita
+        {{-1, -1}},                         // 5: cima e esquerda
+        {{-1, 1}},                          // 6: cima e direita
+        {{1, -1}},                          // 7: baixo e esquerda
+        {{1, 1}},                           // 8: baixo e direita
+        {{-1, 0}, {0, -1}, {0, 1}},         // 9: cima, esquerda e direita
+        {{-1, 0}, {1, 0}, {0, -1}},         // 10: cima, baixo e esquerda
+        {{-1, 0}, {1, 0}, {0, 1}},          // 11: cima, baixo e direita
+        {{1, 0}, {0, -1}, {0, 1}},          // 12: baixo, esquerda e direita
+        {{0, -1}, {0, 1}},                  // 13: esquerda e direita
+        {{-1, 0}, {1, 0}}                   // 14: cima e baixo
+    };
+    // Direção que será usada na simulação
     short int direcaoVento = 0;
 
+    
 public:
     //Variáveis
     Files file;
@@ -31,12 +50,11 @@ public:
 
     //Funções
     void executarSimulacao();
-    void imprimirMatriz(vector<vector<short int>> &matriz);
+    template <typename T>
+    void imprimirMatriz(vector<vector<T>> &matriz);
     void propagacaoFogo();
     vector<vector<short int>> espalharFogo(int posX, int posY, 
         vector<vector<short int>> novaMatriz);
     bool aindaTemFogo();
-    short int definirDirecaoVento();
-    void dispersarUmidade(short int &x, short int &y);
     void atualizarMatrizPassos();
 };
