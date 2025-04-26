@@ -1,7 +1,7 @@
 import random
 
 def gerar_matriz(linhas, colunas):
-    return [[random.choices([0, 1, 4], weights=[1, 3, 0.1])[0] for _ in range(colunas)] for _ in range(linhas)]
+    return [[random.choices([0, 1, 4], weights=[0, 3, 0])[0] for _ in range(colunas)] for _ in range(linhas)]
 
 def salvar_matriz_em_arquivo(matriz, arquivo):
     with open(arquivo, "w") as f:

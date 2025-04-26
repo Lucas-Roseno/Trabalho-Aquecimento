@@ -15,11 +15,8 @@
 * [🧪 Metodologia](#-metodologia)
 * [🛠️ Implementação](#-implementacao)
 * [🧬 Estrutura do Projeto](#-estrutura-do-projeto)
-* [🚀 Como Executar](#-como-executar)
 * [🔥 Análise de Padrões de Propagação do Fogo](#-analise-de-padroes-de-propagacao-do-fogo)
 * [🧠 Algoritmos Emergentes para Melhoria](#-algoritmos-emergentes-para-melhoria)
-* [📊 Resultados Esperados ao Final da Simulação](#-resultados-esperados-ao-final-da-simulacao)
-* [🔚 Conclusão](#-conclusao)
 * [💻 Maquina onde foi programado e testado](#-maquina-onde-foi-programado-e-testado)
 * [👥 Autores](#-autores)
 * [📚 Referências](#-referencias)
@@ -107,6 +104,7 @@ O fluxo principal da simulação inicia em  **main.cpp** , que instancia a class
 * Se na movimentação o animal encontrar água, chama a função de `dispersarUmidade`
 
 #### 🔮 [`short int melhorOpcao(vector<short int> &valorAdjacente, vector<pair<short int, short int>> &posicaoAdjacente, vector<vector<bool>> &visitados, bool acessarVisitados);`](src/Animal.cpp)
+
 * Função que decide qual a melhor a casa para ser explorada
 * Recebe como parâmetro os vetores que contém o valor e a posição de cada casa ortogonal a posição atual do animal, a matriz de casas já visitadas e o booleano para saber se pode acessar essas casas.
 * Segue a ordem: água > vazio ou árvore > queimado.
@@ -117,7 +115,9 @@ O fluxo principal da simulação inicia em  **main.cpp** , que instancia a class
 * Caso o animal encontre uma posição que contenha água, valor 4, ele deve dispersar a umidade, tornando as casas ortogonais em 1 e casa em que ele está vira 0.
 
 ### 📁 [Classe Files](src/Files.hpp)
-  Leitura e gravação dos arquivos [input.dat](arquivos/input.dat) e [output.dat](arquivos/output.dat)
+
+Leitura e gravação dos arquivos [input.dat](arquivos/input.dat) e [output.dat](arquivos/output.dat)
+
 ---
 
 ## ➕Arquivos adicionais:
@@ -147,6 +147,57 @@ make all      # Limpa, compila e executa de uma vez só
 
 ---
 
+## 🔍 [Estudo de Casos]()
+
+### 🌬️ Influência do Vento na Propagação
+
+A simulação implementada permite analisar dois cenários distintos de propagação de incêndios florestais:
+
+#### [Sem vento](estudos_de_caso/semVento.md) ❌🌬️
+
+#### [Com vento](estudos_de_caso/comVento.md) 🌬️
+
+### ⏱️ Previsão do Tamanho do Incêndio
+
+Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
+
+1. **Taxa de Propagação**:
+
+   - Sem vento: de 1 a 4 células/iteração em cada direção
+   - Com vento: até 1-3 células/iteração na direção predominante
+   - Isso em uma matriz ideal, considerando que cada foco de incêndio possui 4 casas com valor 1 ao lado
+2. **Fórmula Estimada**:
+
+   ```
+
+   | Tipo de Vento  | Direções Ativas | Fórmula Área    | Crescimento |
+   | -------------- | --------------- | --------------- | ----------- |
+   | Sem vento      | Todas as 4      | 2t² + 2t + 1    | Quadrático  |
+   | Vento único    | 1 direção       | t + 1           | Linear      |
+   | Vento em L     | 2 direções      | t²/2 + 3t/2 + 1 | Quadrático  |
+   | Vento em leque | 3 direções      | 3t²/4 + 2t + 1  | Quadrático  |
+
+   ```
+3. **Fatores Limitantes**:
+
+   - Barreiras naturais (água, áreas já queimadas)
+   - Umidade dispersada pelo animal
+   - Densidade da vegetação
+4. **Previsibilidade**:
+
+   - Cenário sem vento: alta previsibilidade (crescimento quadrático)
+   - Cenário com vento: média previsibilidade (depende da direção)
+
+---
+
+## 💡 Conlusão
+
+  Logo, o [Estudo de Casos](#-estudo-de-casos) nos permite fazer algumas conclusões.
+  O fogo sempre se propraga de forma lógica, seguindo padrões de formas geométricas que podem ser bem definidas. Contudo, tal lógica depende da influência do vento, ponto inicial do foco de incêndio e a quantidade de objetos que servem como 'obstáculos' para o fogo. A variação de tais fatores faz com que o fogo siga um padrão mais desorganizado, mas ainda sim prevísivel, até um certo ponto.
+  Além disso, tais variações contribuem para a sobrevivência do animal. Quanto mais 'obstáculos' do fogo e um vento favorável em relação a posição incial dele, maior a chance de sobrevivência até o final da simulação.
+
+---
+
 ## 🧬 [Estrutura do Projeto]()
 
 ```text
@@ -171,64 +222,6 @@ Trabalho-Aquecimento/
 └── README.md
 
 ```
-
----
-
-## 🔥 [Análise de Padrões de Propagação do Fogo]()
-
-### 🌬️ Influência do Vento na Propagação
-
-A simulação implementada permite analisar dois cenários distintos de propagação de incêndios florestais:
-
-#### Sem Vento (Propagação Ortogonal)
-
-![Matriz sem vento](assets/semVento.png)
-
-*Figura 1: Propagação uniforme em todas as direções (cima, baixo, esquerda, direita)*
-
-- O fogo se espalha igualmente em todas as 4 direções ortogonais
-- Forma padrões aproximadamente circulares/quadrados
-- Velocidade de propagação constante em todas as direções
-- Áreas queimadas são mais compactas e previsíveis
-
-#### Com Vento (Propagação Direcional)
-
-![Vento para direita](assets/ventoDireita.png)
-
-*Figura 2: Propagação influenciada por vento (neste caso, vento para direita)*
-
-- O fogo se espalha preferencialmente na direção do vento
-- Áreas queimadas são mais irregulares
-
-### ⏱️ Previsão do Tamanho do Incêndio
-
-Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
-
-1. **Taxa de Propagação**:
-
-   - Sem vento: de 1 a 4 células/iteração em cada direção
-   - Com vento: até 1-3 células/iteração na direção predominante
-2. **Fórmula Estimada**:
-
-   ```
-
-   | Tipo de Vento  | Direções Ativas | Fórmula Área    | Crescimento |
-   | -------------- | --------------- | --------------- | ----------- |
-   | Sem vento      | Todas as 4      | 2t² + 2t + 1    | Quadrático  |
-   | Vento único    | 1 direção       | t + 1           | Linear      |
-   | Vento em L     | 2 direções      | t²/2 + 3t/2 + 1 | Quadrático  |
-   | Vento em leque | 3 direções      | 3t²/4 + 2t + 1  | Quadrático  |
-
-   ```
-3. **Fatores Limitantes**:
-
-   - Barreiras naturais (água, áreas já queimadas)
-   - Umidade dispersada pelo animal
-   - Densidade da vegetação
-4. **Previsibilidade**:
-
-   - Cenário sem vento: alta previsibilidade (crescimento quadrático)
-   - Cenário com vento: média previsibilidade (depende da direção)
 
 ---
 
@@ -276,29 +269,15 @@ Cada iteração na simulação pode ser interpretada como uma unidade de tempo:
 
 ### 📈 Comparação de Desempenho
 
-| Algoritmo           | Complexidade   | Realismo   | Adequação |
-| ------------------- | -------------- | ---------- | --------- |
-| Atual (Ortogonal)   | O(n²)          | Médio      | Boa       |
-| Dijkstra            | O(n log n)     | Alto       | Ótima     |
-| Percolação          | O(n³)          | Alto       | Regular   |
-| Autômatos Celulares | O(kn²)         | Alto       | Boa       |
-| Aprendizado         | O(n²) + treino | Muito Alto | Excelente |
+| Algoritmo            | Complexidade    | Realismo   | Adequação |
+| -------------------- | --------------- | ---------- | ----------- |
+| Atual (Ortogonal)    | O(n²)          | Médio     | Boa         |
+| Dijkstra             | O(n log n)      | Alto       | Ótima      |
+| Percolação         | O(n³)          | Alto       | Regular     |
+| Autômatos Celulares | O(kn²)         | Alto       | Boa         |
+| Aprendizado          | O(n²) + treino | Muito Alto | Excelente   |
 
 *Tabela 1: Comparação entre abordagens possíveis*
-
----
-
-## 📊 [Resultados Esperados ao Final da Simulação]()
-
-* Registro detalhado da evolução do fogo a cada iteração.
-* Caminho percorrido pelo animal, total de passos e sobrevivência.
-* Possível análise de tempo de execução com diferentes condições (vento ou não).
-
----
-
-## 🔚 [Conclusão]()
-
-A simulação atual oferece uma boa base para entender os padrões fundamentais de propagação de incêndios florestais. A inclusão do vento adiciona um fator realista que altera significativamente a dinâmica do fogo. Para melhorias futuras, a implementação de algoritmos mais sofisticados, particularmente aqueles baseados em autômatos celulares ou aprendizado por reforço, poderia aumentar tanto a precisão quanto o valor educacional da simulação.
 
 ---
 
@@ -313,8 +292,8 @@ A simulação atual oferece uma boa base para entender os padrões fundamentais 
 
 ## 👥 [Autores]()
 
-| Nome                         | Função        | Contato                  |
-| ---------------------------- | ------------- | ------------------------ |
+| Nome                          | Função      | Contato                  |
+| ----------------------------- | ------------- | ------------------------ |
 | Lucas Roseno Medeiros Araújo | Desenvolvedor | lucasroseno759@gmail.com |
 
 ---

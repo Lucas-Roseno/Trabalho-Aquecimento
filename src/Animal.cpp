@@ -4,26 +4,39 @@
 
 void Animal::inicializador(vector<vector<short int>> &matriz, Files &file)
 {
-    visitados.resize(file.linhas, vector<bool>(file.colunas, false));
-    matrizPassos.resize(file.linhas, vector<char>(file.colunas));
-
-    matrizAnimal = matriz;
-
-    for (short int i = 0; i < file.linhas; i++)
+    try
     {
-        for (short int j = 0; j < file.colunas; j++)
+        visitados.resize(file.linhas, vector<bool>(file.colunas, false));
+        matrizPassos.resize(file.linhas, vector<char>(file.colunas));
+    
+        matrizAnimal = matriz;
+    
+        for (short int i = 0; i < file.linhas; i++)
         {
-            matrizPassos[i][j] = static_cast<char>(matriz[i][j] + '0');
-            if (matriz[i][j] == 0 && posicaoAtual.first == -1)
+            for (short int j = 0; j < file.colunas; j++)
             {
-                posicaoAtual = make_pair(i, j);
-                matrizAnimal[i][j] = 9;
-                matrizPassos[i][j] = '9';
-                visitados[i][j] = true;
-                cout << "\nPosição do animal: " << posicaoAtual.first << ", "
-                     << posicaoAtual.second << endl;
+                matrizPassos[i][j] = static_cast<char>(matriz[i][j] + '0');
+                if (matriz[i][j] == 0 && posicaoAtual.first == -1)
+                {
+                    posicaoAtual = make_pair(i, j);
+                    matrizAnimal[i][j] = 9;
+                    matrizPassos[i][j] = '9';
+                    visitados[i][j] = true;
+                    cout << "\nPosição do animal: " << posicaoAtual.first << ", "
+                         << posicaoAtual.second << endl;
+                }
             }
         }
+    
+        if (posicaoAtual == make_pair<short int, short int>(-1, -1))
+        {
+            throw runtime_error("Não foi encontrada nenhuma posição vazia para o animal começar!");
+        }
+
+    }catch (const exception &e)
+    {
+        cout << e.what() << endl;
+        exit(EXIT_FAILURE);
     }
 }
 

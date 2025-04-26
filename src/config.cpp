@@ -60,7 +60,7 @@ void config::executarSimulacao()
   cout << "Condição final do animal: " << (animal.morreu ? "morreu" : "sobreviveu") << endl;
   if (animal.morreu)
   {
-    cout << "Iteração em que o animal morreu: " << animal.iteracaoMorte;
+    cout << "Iteração em que o animal morreu: " << animal.iteracaoMorte << endl;
   }
 
   file.dadosFinaisAnimal(animal.matrizPassos, animal.passos, animal.morreu,
