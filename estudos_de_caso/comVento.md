@@ -1,22 +1,25 @@
 ## Teste 4: vento em uma direção
 
-Arquivos: [inTeste4.dat](../arquivos/inTeste4.dat), [outTeste4.dat](../arquivos/outTeste4.dat)
+Arquivos: [inTeste4.dat](), [outTeste4.dat]()
+
 ![Exemplo de imagem](../assets/teste4.png)
 
-O fogo se propaga em linha reta em apenas uma direção(nesse caro, direita). Pode se afirmar que o animal sobrevive.
+O fogo se propaga em linha reta em apenas uma direção (neste caso, para a direita). Pode-se afirmar que o animal sobrevive.
 
 ## Teste 5: vento em duas direções
 
-Arquivos: [inTeste5.dat](../arquivos/inTeste5.dat), [outTeste5.dat](../arquivos/outTeste5.dat)
+Arquivos: [inTeste5.dat](), [outTeste5.dat]()
+
 ![Exemplo de imagem](../assets/teste5.png)
 
-Forma um padrão de área queimada retangular, e o fogo se espalha na forma de uma diagonal do foco até o limite da matriz. Se o animal estiver fora do retângulo formado pela linha e coluna do foco incial, há grandes chances de sobrevivência. Ventos: direita e cima
+Forma-se um padrão de área queimada retangular, e o fogo se espalha em diagonal do foco até o limite da matriz. Se o animal estiver fora do retângulo formado pela linha e pela coluna do foco inicial, há grandes chances de sobrevivência. Ventos: direita e cima.
 
 ## Teste 6: vento em três direções
 
-Arquivos: [inTeste6.dat](../arquivos/inTeste6.dat), [outTeste6.dat](../arquivos/outTeste6.dat)
+Arquivos: [inTeste6.dat](), [outTeste6.dat]()
+
 ![Exemplo de imagem](../assets/teste6.png)
 
-Fogo se espalha em formato triangular e o padrão de área queimada é retangular. Se a posição incial do animal for fora desse retângulo, também a grandes chances de sobreviver. Vento: cima, direita e baixo.
+O fogo se espalha em formato triangular, e o padrão de área queimada é retangular. Se a posição inicial do animal estiver fora desse retângulo, há também grandes chances de sobrevivência. Ventos: cima, direita e baixo.
 
-*Nota: com obstáculo para o fogo seguiria os mesmo padrões dos teste anteriores, mas as formas ficariam um pouco diferente.
+*Nota: com obstáculo para o fogo, seguir-se-iam os mesmos padrões dos testes anteriores, mas as formas ficariam um pouco diferentes.*
