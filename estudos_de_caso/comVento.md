@@ -1,6 +1,6 @@
 ## Teste 4: vento em uma direção
 
-Arquivos: [inTeste4.dat]((../arquivos/inTeste4.dat), [outTeste4.dat](../arquivos/outTeste4.dat)
+Arquivos: [inTeste4.dat](../arquivos/inTeste4.dat), [outTeste4.dat](../arquivos/outTeste4.dat)
 
 ![Exemplo de imagem](../assets/teste4.png)
 
