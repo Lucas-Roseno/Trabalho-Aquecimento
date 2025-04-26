@@ -1,6 +1,6 @@
 ## Teste 4: vento em uma direção
 
-Arquivos: [inTeste4.dat](), [outTeste4.dat]()
+Arquivos: [inTeste4.dat]((../arquivos/inTeste4.dat), [outTeste4.dat](../arquivos/outTeste4.dat)
 
 ![Exemplo de imagem](../assets/teste4.png)
 
@@ -8,7 +8,7 @@ O fogo se propaga em linha reta em apenas uma direção (neste caso, para a dire
 
 ## Teste 5: vento em duas direções
 
-Arquivos: [inTeste5.dat](), [outTeste5.dat]()
+Arquivos: [inTeste5.dat](../arquivos/inTeste5.dat), [outTeste5.dat](../arquivos/outTeste5.dat)
 
 ![Exemplo de imagem](../assets/teste5.png)
 
@@ -16,7 +16,7 @@ Forma-se um padrão de área queimada retangular, e o fogo se espalha em diagona
 
 ## Teste 6: vento em três direções
 
-Arquivos: [inTeste6.dat](), [outTeste6.dat]()
+Arquivos: [inTeste6.dat](../arquivos/inTeste6.dat), [outTeste6.dat](../arquivos/outTeste6.dat)
 
 ![Exemplo de imagem](../assets/teste6.png)
 
