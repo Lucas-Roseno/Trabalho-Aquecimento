@@ -69,6 +69,7 @@ void config::executarSimulacao()
   file.fecharOutput();
 }
 
+
 template <typename T>
 void config::imprimirMatriz(vector<vector<T>> &matriz)
 {
@@ -76,38 +77,45 @@ void config::imprimirMatriz(vector<vector<T>> &matriz)
   {
     for (const auto &elemento : linha)
     {
-      switch (elemento)
+      if (IMPRIMIR_COM_EMOJI)
       {
-      case '0':
-      case 0:
-        cout << "\U0001FAA8  "; // 🪨 (Espaço vazio)
-        break;
-      case '1':
-      case 1:
-        cout << "\U0001F332 "; // 🌲 (Árvore)
-        break;
-      case '2':
-      case 2:
-        cout << "\U0001F525 "; // 🔥 (Fogo)
-        break;
-      case '3':
-      case 3:
-        cout << "\U00002B1B "; // ⬛ (Bloco preto)
-        break;
-      case '4':
-      case 4:
-        cout << "\U0001F4A7 "; // 💧 (Água)
-        break;
-      case '9':
-      case 9:
-        cout << "\U0001F412 "; // 🐒 (Animal)
-        break;
-      case '*':
-        cout << "\U0001F43E "; // 🐾 (Pegadas)
-        break;
-      default:
-        cout << elemento << " "; // Outros valores
-        break;
+        switch (elemento)
+        {
+        case '0':
+        case 0:
+          cout << "\U0001FAA8  "; // 🪨
+          break;
+        case '1':
+        case 1:
+          cout << "\U0001F332 "; // 🌲
+          break;
+        case '2':
+        case 2:
+          cout << "\U0001F525 "; // 🔥
+          break;
+        case '3':
+        case 3:
+          cout << "\U00002B1B "; // ⬛
+          break;
+        case '4':
+        case 4:
+          cout << "\U0001F4A7 "; // 💧
+          break;
+        case '9':
+        case 9:
+          cout << "\U0001F412 "; // 🐒
+          break;
+        case '*':
+          cout << "\U0001F43E "; // 🐾
+          break;
+        default:
+          cout << elemento << " ";
+          break;
+        }
+      }
+      else
+      {
+        cout << elemento << "  ";
       }
     }
     cout << "\n";

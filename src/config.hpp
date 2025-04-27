@@ -10,6 +10,7 @@
 using namespace std;
 
 #define IteracoesMax 1000000000
+#define IMPRIMIR_COM_EMOJI 1 //1 imprime emojis; 0 para imprimir os números normais
 
 class config
 {
